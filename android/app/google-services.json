@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "507608710276",
+    "project_id": "myfauja",
+    "storage_bucket": "myfauja.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507608710276:android:ee8d0a91fb86661fa5d6d1",
+        "android_client_info": {
+          "package_name": "com.stanleylab97.myfauja"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "507608710276-96isf90uc22gone7vtvfrag6sevjqrgq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stanleylab97.myfauja",
+            "certificate_hash": "501f71796722d40fb959c1b8b59cad1162805c01"
+          }
+        },
+        {
+          "client_id": "507608710276-hu6nuhk3eemolemnu2m6pp980qlbv42u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhwxbkPjb8fJ8l4k7JT3BlR0muHHqTF3k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "507608710276-hu6nuhk3eemolemnu2m6pp980qlbv42u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
