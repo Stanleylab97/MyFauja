@@ -1,5 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:myfauja/blocs/signIn_bloc.dart';
+import 'package:myfauja/pages/sign_in/sign_in_screen.dart';
+import 'package:myfauja/utils/next_screen.dart';
+import 'package:provider/provider.dart';
+import '../../../blocs/theme_bloc.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
 
@@ -35,7 +40,21 @@ class Body extends StatelessWidget {
           ProfileMenu(
             text: "Déconnexion",
             icon: "assets/icons/Log out.svg",
-            press: () {},
+            press: () async {
+              final SignInBloc sb = context.read<SignInBloc>();
+              Navigator.pop(context);
+              await context
+                  .read<SignInBloc>()
+                  .userSignout()
+                  .then(
+                      (value) => context.read<SignInBloc>().afterUserSignOut())
+                  .then((value) {
+                if (context.read<ThemeBloc>().darkTheme == true) {
+                  context.read<ThemeBloc>().toggleTheme();
+                }
+                nextScreenCloseOthers(context, SignInScreen());
+              });
+            },
           ),
         ],
       ),

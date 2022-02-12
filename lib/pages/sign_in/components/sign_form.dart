@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:myfauja/blocs/internet_bloc.dart';
 import 'package:myfauja/blocs/signIn_bloc.dart';
@@ -55,30 +56,49 @@ class _SignFormState extends State<SignForm> {
 
       await ib.checkInternet();
       if (ib.hasInternet == false) {
-        openSnacbar(_scaffoldKey, 'no internet');
+        Flushbar(
+          message: "Vérifiez votre connexion internet",
+          icon: Icon(
+            Icons.info_outline,
+            size: 28.0,
+            color: Colors.blue[300],
+          ),
+          duration: Duration(seconds: 5),
+          leftBarIndicatorColor: Colors.blue[300],
+        )..show(context);
       } else {
         setState(() {
           signInStart = true;
         });
         sb.signInwithEmailPassword(email, password).then((_) async {
           if (sb.hasError == false) {
-
             sb
                 .getUserDatafromFirebase(sb.firebaseLoyer.uid)
                 //.then((value) => sb.guestSignout())
                 .then((value) => sb
-                .saveDataToSP()
-                .then((value) => sb.setSignIn().then((value) {
-              setState(() {
-                signInComplete = true;
-              });
-              afterSignIn();
-            })));
+                    .saveDataToSP()
+                    .then((value) => sb.setSignIn().then((value) {
+                          setState(() {
+                            signInComplete = true;
+                            signInStart = false;
+                          });
+                          print("SAVED");
+                          afterSignIn();
+                        })));
           } else {
             setState(() {
               signInStart = false;
             });
-            openSnacbar(_scaffoldKey, sb.errorCode);
+            Flushbar(
+              message: sb.errorCode,
+              icon: Icon(
+                Icons.info_outline,
+                size: 28.0,
+                color: Colors.blue[300],
+              ),
+              duration: Duration(seconds: 5),
+              leftBarIndicatorColor: Colors.blue[300],
+            )..show(context);
           }
         });
       }
@@ -86,11 +106,7 @@ class _SignFormState extends State<SignForm> {
   }
 
   afterSignIn() {
-    if (widget.tag == null) {
-      Navigator.pushReplacementNamed(context, Dashboard.routeName);
-    } else {
-      Navigator.pop(context);
-    }
+    Navigator.pushReplacementNamed(context, Dashboard.routeName);
   }
 
   @override
@@ -117,21 +133,23 @@ class _SignFormState extends State<SignForm> {
           ),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
-          signInStart? Center(child: CircularProgressIndicator()): DefaultButton(
-            text: "Connexion",
-            press: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                setState(() {
-                  signInStart=true;
-                });
-                handleSignInwithemailPassword();
-                setState(() {
-                  signInStart=false;
-                });
-              }
-            },
-          ),
+          signInStart
+              ? Center(child: CircularProgressIndicator())
+              : DefaultButton(
+                  text: "Connexion",
+                  press: () {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      setState(() {
+                        signInStart = true;
+                      });
+                      handleSignInwithemailPassword();
+                      setState(() {
+                        signInStart = false;
+                      });
+                    }
+                  },
+                ),
         ],
       ),
     );

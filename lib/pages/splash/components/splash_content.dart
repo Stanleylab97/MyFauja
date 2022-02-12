@@ -8,9 +8,10 @@ class SplashContent extends StatelessWidget {
   const SplashContent({
     Key? key,
     this.text,
+    this.textbody,
     this.image,
   }) : super(key: key);
-  final String? text, image;
+  final String? text, textbody, image;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,12 @@ class SplashContent extends StatelessWidget {
           text!,
           textAlign: TextAlign.center,
         ),
+        SizedBox(height: getProportionateScreenHeight(10),),
+        Text(
+          textbody!,
+          textAlign: TextAlign.center,
+        ),
+
         Spacer(flex: 2),
         Image.asset(
           image!,

@@ -5,6 +5,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:myfauja/pages/menu_pages/events/event_details.dart';
 import 'package:myfauja/pages/menu_pages/events/participate_event.dart';
 import 'package:myfauja/pages/profile/components/profile_pic.dart';
+import 'package:myfauja/pages/profile/profile_screen.dart';
 import 'package:myfauja/utils/common/size_config.dart';
 
 class Dashboard extends StatefulWidget {
@@ -28,11 +29,7 @@ class _DashboardState extends State<Dashboard> {
 
     RegisterToEvent(),
 
-    ProfilePic()
-    // Center(child:Text(
-    //   'Profil',
-    //   style: optionStyle,
-    // ))
+     ProfileScreen()
   ];
 
   @override
@@ -72,7 +69,7 @@ class _DashboardState extends State<Dashboard> {
 
                 GButton(
                   icon: FontAwesomeIcons.calendar,
-                  text: 'Evenement',
+                  text: '6e congrès',
                   textStyle: TextStyle(fontSize: 14),
                 ),
 

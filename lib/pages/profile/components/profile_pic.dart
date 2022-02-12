@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myfauja/blocs/signIn_bloc.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePic extends StatelessWidget {
   const ProfilePic({
@@ -9,6 +11,8 @@ class ProfilePic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SignInBloc sb = Provider.of<SignInBloc>(context, listen: false);
+
     return SizedBox(
       height: 115,
       width: 115,
@@ -17,28 +21,28 @@ class ProfilePic extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider("https://images.pexels.com/photos/4427620/pexels-photo-4427620.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
+            backgroundImage: CachedNetworkImageProvider(sb.firebaseLoyer.imageUrl),
           ),
-          Positioned(
-            right: -16,
-            bottom: 0,
-            child: SizedBox(
-              height: 46,
-              width: 46,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    side: BorderSide(color: Colors.white),
-                  ),
-                  primary: Colors.white,
-                  backgroundColor: Color(0xFFF5F6F9),
-                ),
-                onPressed: () {},
-                child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
-              ),
-            ),
-          )
+          // Positioned(
+          //   right: -16,
+          //   bottom: 0,
+          //   child: SizedBox(
+          //     height: 46,
+          //     width: 46,
+          //     child: TextButton(
+          //       style: TextButton.styleFrom(
+          //         shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.circular(50),
+          //           side: BorderSide(color: Colors.white),
+          //         ),
+          //         primary: Colors.white,
+          //         backgroundColor: Color(0xFFF5F6F9),
+          //       ),
+          //       onPressed: () {},
+          //       child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
+          //     ),
+          //   ),
+          // )
         ],
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myfauja/ui/components/no_account_text.dart';
-import 'package:myfauja/ui/components/socal_card.dart';
 import 'package:myfauja/utils/common/size_config.dart';
 import 'sign_form.dart';
 

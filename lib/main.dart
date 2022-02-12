@@ -5,7 +5,6 @@ import 'package:myfauja/blocs/signIn_bloc.dart';
 import 'package:myfauja/blocs/tab_inde_bloc.dart';
 import 'package:myfauja/blocs/theme_bloc.dart';
 import 'package:myfauja/models/theme_model.dart';
-import 'package:myfauja/pages/launching/splash.dart';
 import 'package:myfauja/pages/splash/splash_screen.dart';
 import 'package:myfauja/utils/common/routes.dart';
 import 'package:provider/provider.dart';

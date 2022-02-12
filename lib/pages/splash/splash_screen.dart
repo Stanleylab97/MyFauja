@@ -17,10 +17,39 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
 
+  afterSplash() {
+    final SignInBloc sb = context.read<SignInBloc>();
+
+      if (sb.isSignedIn == true) {
+        redirectUser();
+      } else
+        gotoSignInPage();
+
+  }
+
+
+
+   redirectUser()  {
+    Navigator.pushReplacementNamed(context, Dashboard.routeName);
+  }
+
+  gotoHomePage() {
+    final SignInBloc sb = context.read<SignInBloc>();
+    if (sb.isSignedIn == true) {
+      sb.getDataFromSp();
+    }
+    Navigator.pushReplacementNamed(context, Dashboard.routeName);
+  }
+
+  gotoSignInPage() {
+    Navigator.pushReplacementNamed(context, SignInScreen.routeName);
+  }
+
   @override
   void initState() {
     //afterSplash();
     super.initState();
+
   }
 
   @override

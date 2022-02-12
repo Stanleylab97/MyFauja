@@ -19,16 +19,18 @@ class _BodyState extends State<Body> {
   int currentPage = 0;
   List<Map<String, String>> splashData = [
     {
-      "text": "Bienvenue chez vous!",
+      "text": "QUI SOMMES-NOUS?",
+      "textbody": "Constituée à Dakar, la Fédération Africaine des Associations et Unions de Jeunes Avocats est un regroupement apolitique d'associations, d'unions ou syndicats de jeunes avocats africains.",
       "image": "assets/images/intro/right.jpg"
     },
     {
-      "text":
-          "Echanges & Dialogue",
+      "text": "Notre vocation",
+      "textbody": "Notre vocation est de contribuer à l’amélioration des conditions d’exercice de la profession par les jeunes avocats, de promouvoir les actions nécessaires à la protection de la personne humaine, de ses libertés ainsi qu’au respect des droits de la défense, de contribuer à l’avènement, au maintien et à l’amélioration de l’état de droit.",
       "image": "assets/images/intro/network.jpg"
     },
     {
-      "text": "Regroupement apolitique d'associations, \n d'unions ou syndicats de jeunes avocats africains",
+      "text": "NOS MISSIONS",
+      "textbody": "La FA-UJA travail sur les problèmes affectant la profession d’Avocat dans son ensemble, et plus spécialement les jeunes Avocats, qui peuvent rencontrer des difficultés particulières liées à leur installation ou à leur exercice professionnel.",
       "image": "assets/images/intro/syndicat.jpg"
     },
   ];
@@ -68,7 +70,7 @@ class _BodyState extends State<Body> {
         child: Column(
           children: <Widget>[
             Expanded(
-              flex: 3,
+              flex: 4,
               child: PageView.builder(
                 onPageChanged: (value) {
                   setState(() {
@@ -79,11 +81,12 @@ class _BodyState extends State<Body> {
                 itemBuilder: (context, index) => SplashContent(
                   image: splashData[index]["image"],
                   text: splashData[index]['text'],
+                  textbody: splashData[index]['textbody'],
                 ),
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: getProportionateScreenWidth(20)),
