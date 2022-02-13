@@ -18,6 +18,20 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+
+ // late ScrollController _scrollController;
+
+  @override
+  void initState() {
+   // _scrollController=ScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    //_scrollController.dispose();
+    super.dispose();
+  }
   int _selectedIndex = 1 ;
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
@@ -27,7 +41,7 @@ class _DashboardState extends State<Dashboard> {
       style: optionStyle,
     )),
 
-    RegisterToEvent(),
+     EventDetails(),
 
      ProfileScreen()
   ];
@@ -37,7 +51,8 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: Container(
+      bottomNavigationBar:
+       Container(
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [

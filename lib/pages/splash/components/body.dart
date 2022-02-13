@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfauja/blocs/signIn_bloc.dart';
 import 'package:myfauja/pages/dashboard.dart';
+import 'package:myfauja/pages/menu_pages/events/event_details.dart';
 import 'package:myfauja/pages/sign_in/sign_in_screen.dart';
 import 'package:myfauja/ui/components/default_button.dart';
 import 'package:myfauja/utils/common/constants.dart';
@@ -21,17 +22,17 @@ class _BodyState extends State<Body> {
     {
       "text": "QUI SOMMES-NOUS?",
       "textbody": "Constituée à Dakar, la Fédération Africaine des Associations et Unions de Jeunes Avocats est un regroupement apolitique d'associations, d'unions ou syndicats de jeunes avocats africains.",
-      "image": "assets/images/intro/right.jpg"
+      "image": "assets/images/intro/justice.png"
     },
     {
       "text": "Notre vocation",
       "textbody": "Notre vocation est de contribuer à l’amélioration des conditions d’exercice de la profession par les jeunes avocats, de promouvoir les actions nécessaires à la protection de la personne humaine, de ses libertés ainsi qu’au respect des droits de la défense, de contribuer à l’avènement, au maintien et à l’amélioration de l’état de droit.",
-      "image": "assets/images/intro/network.jpg"
+      "image": "assets/images/intro/balance.png"
     },
     {
       "text": "NOS MISSIONS",
       "textbody": "La FA-UJA travail sur les problèmes affectant la profession d’Avocat dans son ensemble, et plus spécialement les jeunes Avocats, qui peuvent rencontrer des difficultés particulières liées à leur installation ou à leur exercice professionnel.",
-      "image": "assets/images/intro/syndicat.jpg"
+      "image": "assets/images/intro/splash_11.png"
     },
   ];
 
@@ -105,6 +106,8 @@ class _BodyState extends State<Body> {
                       text: "Continuer",
                       press: () {
                         afterSplash();
+                        //Navigator.pushReplacementNamed(context, Dashboard.routeName);
+
                       },
                     ),
                     Spacer(),

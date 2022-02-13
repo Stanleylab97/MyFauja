@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:myfauja/blocs/internet_bloc.dart';
 import 'package:myfauja/blocs/signIn_bloc.dart';
@@ -56,7 +57,16 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
       FocusScope.of(context).requestFocus(new FocusNode());
       await ib.checkInternet();
       if (ib.hasInternet == false) {
-        openSnacbar(_scaffoldKey, 'Pas de connexion internet');
+        Flushbar(
+          message: "Vérifiez votre connexion internet",
+          icon: Icon(
+            Icons.info_outline,
+            size: 28.0,
+            color: Colors.blue[300],
+          ),
+          duration: Duration(seconds: 5),
+          leftBarIndicatorColor: Colors.blue[300],
+        )..show(context);
       } else {
         setState(() {
           signUpStarted = true;
@@ -71,7 +81,19 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             setState(() {
               signUpStarted = false;
             });
-            openSnacbar(_scaffoldKey, sb.errorCode);
+
+            Flushbar(
+              message: "Une erreur s'est produite",
+              icon: Icon(
+                Icons.info_outline,
+                size: 28.0,
+                color: Colors.blue[300],
+              ),
+              duration: Duration(seconds: 5),
+              leftBarIndicatorColor: Colors.blue[300],
+            )..show(context);
+
+            print(sb.errorCode);
           }
         });
       }
@@ -189,7 +211,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
       onSaved: (newValue) => firstName = newValue,
       onChanged: (value) {
         if (value.isNotEmpty) {
-          removeError(error: kNamelNullError);
+          removeError(error: 'Le prénom ne peut rester vide');
         }
         return null;
       },
@@ -201,8 +223,8 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         return null;
       },
       decoration: InputDecoration(
-        labelText: "Prénoms",
-        hintText: "Entrez votre prénoms",
+        labelText: "Prénom",
+        hintText: "Entrez votre prénom",
         // If  you are using latest version of flutter then lable text and hint text shown like this
         // if you r using flutter less then 1.20.* then maybe this is not working properly
         floatingLabelBehavior: FloatingLabelBehavior.always,

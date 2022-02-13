@@ -101,8 +101,8 @@ class SignInBloc extends ChangeNotifier {
           .get()
           .then((DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists) {
-          _firebaseLoyer=FirebaseLoyer(uid: currentUser!.uid ,loyerDataGotFromAPI: LoyerAppData(nom: documentSnapshot['surname'] ,prenom: documentSnapshot['firstname'], email: documentSnapshot['email'], specialite: documentSnapshot['speciality'],country_code: documentSnapshot['country'] ,contact: documentSnapshot['contact'], cabinet: documentSnapshot['cabinet']), status: documentSnapshot['status'], description: documentSnapshot['description'], imageUrl: documentSnapshot['profileUrl'], lastseen:null , signInProvider: documentSnapshot['provider'] , createdAt: null );
-         // print("Nom utilisateur : "+_firebaseLoyer.loyerDataGotFromAPI.nom);
+          _firebaseLoyer=FirebaseLoyer(uid: currentUser!.uid ,loyerDataGotFromAPI: LoyerAppData(nom: documentSnapshot['surname'] ,prenom: documentSnapshot['firstname'], email: documentSnapshot['email'], specialite: documentSnapshot['speciality'],country_code: documentSnapshot['country'] ,contact: documentSnapshot['contact'], cabinet: documentSnapshot['cabinet']), status: documentSnapshot['status'], description: documentSnapshot['description'], imageUrl: documentSnapshot['profileUrl'], lastseen:null , signInProvider: documentSnapshot['provider'] ,usercategory: documentSnapshot['userCategory'], createdAt: null );
+          print("Nom utilisateur : "+_firebaseLoyer.loyerDataGotFromAPI.nom);
 
         } else {
           print('Document does not exist on the database');
@@ -131,7 +131,7 @@ class SignInBloc extends ChangeNotifier {
   }
 
   Future saveToFirebase(LoyerAppData newloyerData) async {
-    this._firebaseLoyer=FirebaseLoyer(loyerDataGotFromAPI: LoyerAppData(nom: newloyerData.nom,prenom: newloyerData.prenom,email: newloyerData.email,specialite: newloyerData.specialite,country_code: "",contact: newloyerData.contact,cabinet: ""), uid: FirebaseAuth.instance.currentUser!.uid.toString(), status: "Offline", description: "Une bioographie", imageUrl: defaultUserImageUrl, lastseen: FieldValue.serverTimestamp(),signInProvider: "email",createdAt: FieldValue.serverTimestamp());
+    this._firebaseLoyer=FirebaseLoyer(loyerDataGotFromAPI: LoyerAppData(nom: newloyerData.nom,prenom: newloyerData.prenom,email: newloyerData.email,specialite: newloyerData.specialite,country_code: "",contact: newloyerData.contact,cabinet: ""), uid: FirebaseAuth.instance.currentUser!.uid.toString(), status: "Offline", description: "Une bioographie", imageUrl: defaultUserImageUrl, lastseen: FieldValue.serverTimestamp(),signInProvider: "email", usercategory: "USER",createdAt: FieldValue.serverTimestamp());
     print(_firebaseLoyer.uid);
     final DocumentReference ref =
     FirebaseFirestore.instance.collection('users').doc(_firebaseLoyer.uid);
@@ -149,7 +149,8 @@ class SignInBloc extends ChangeNotifier {
       'description':_firebaseLoyer.description,
       'createdAt': FieldValue.serverTimestamp(),
       'speciality': _firebaseLoyer.loyerDataGotFromAPI.specialite,
-      'provider':_firebaseLoyer.signInProvider
+      'provider':_firebaseLoyer.signInProvider,
+      'userCategory': _firebaseLoyer.usercategory
     };
 
     await ref.set(userData);
@@ -176,6 +177,9 @@ class SignInBloc extends ChangeNotifier {
     await sp.setString('cabinet', _firebaseLoyer.loyerDataGotFromAPI.cabinet);
     await sp.setString('country', _firebaseLoyer.loyerDataGotFromAPI.country_code);
     await sp.setString('specialite', _firebaseLoyer.loyerDataGotFromAPI.specialite);
+    await sp.setString('userCategory', _firebaseLoyer.usercategory);
+
+
   }
 
   Future getDataFromSp() async {
@@ -189,6 +193,7 @@ class SignInBloc extends ChangeNotifier {
     _firebaseLoyer.imageUrl = sp.getString('imageUrl').toString();
     _firebaseLoyer.uid = sp.getString('uid').toString();
     _firebaseLoyer.description=sp.getString('description').toString();
+    _firebaseLoyer.usercategory=sp.getString('userCategory').toString();
     _firebaseLoyer.signInProvider = sp.getString('sign_in_provider').toString();
 
     notifyListeners();
@@ -200,7 +205,7 @@ class SignInBloc extends ChangeNotifier {
         .doc(uid)
         .get()
         .then((DocumentSnapshot snap) {
-      _firebaseLoyer = FirebaseLoyer(uid: snap['uid'],loyerDataGotFromAPI: LoyerAppData(nom: snap['surname'], prenom:  snap['firstname'],email: snap['email'] , specialite: snap['speciality'],country_code: snap['country'],contact:snap['contact'] ,cabinet: snap['cabinet']), status: snap['status'], description: snap['description'], imageUrl: snap['profileUrl'] , lastseen: snap['lastseen'] , signInProvider: snap['provider'], createdAt: snap['createdAt'] ) ;
+      _firebaseLoyer = FirebaseLoyer(uid: snap['uid'],loyerDataGotFromAPI: LoyerAppData(nom: snap['surname'], prenom:  snap['firstname'],email: snap['email'] , specialite: snap['speciality'],country_code: snap['country'],contact:snap['contact'] ,cabinet: snap['cabinet']), status: snap['status'], description: snap['description'], imageUrl: snap['profileUrl'] , lastseen: snap['lastseen'] , signInProvider: snap['provider'], usercategory: snap['userCategory'],createdAt: snap['createdAt'] ) ;
 
     });
     notifyListeners();
@@ -234,14 +239,6 @@ class SignInBloc extends ChangeNotifier {
       notifyListeners();
     });
   }
-
-  Future setGuestUser() async {
-    final SharedPreferences sp = await SharedPreferences.getInstance();
-    await sp.setBool('guest_user', true);
-    _guestUser = true;
-    notifyListeners();
-  }
-
 
 
   Future clearAllData() async {

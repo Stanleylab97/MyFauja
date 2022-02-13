@@ -19,6 +19,8 @@ import 'package:provider/provider.dart';
 import '../../../utils/common/size_config.dart';
 
 class RegisterToEvent extends StatefulWidget {
+  static String routeName = "/registerEvent";
+
   const RegisterToEvent({Key? key}) : super(key: key);
 
   @override
@@ -28,32 +30,34 @@ class RegisterToEvent extends StatefulWidget {
 class _RegisterToEventState extends State<RegisterToEvent> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SizedBox(
-        width: double.infinity,
-        child: Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: SizeConfig.screenHeight * 0.03),
-                Text("Inscription au congrès",
-                    style: TextStyle(
-                      fontSize: getProportionateScreenWidth(24),
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      height: 1.5,
-                    )),
-                SizedBox(height: SizeConfig.screenHeight * 0.03),
-                Text(
-                  "Il suffit de remplir le formulaire",
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: SizeConfig.screenHeight * 0.06),
-                CompleteProfileForm(),
-                SizedBox(height: getProportionateScreenHeight(30)),
-              ],
+    return Material(
+      child: SafeArea(
+        child: SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: SizeConfig.screenHeight * 0.03),
+                  Text("Inscription au congrès",
+                      style: TextStyle(
+                        fontSize: getProportionateScreenWidth(24),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        height: 1.5,
+                      )),
+                  SizedBox(height: SizeConfig.screenHeight * 0.03),
+                  Text(
+                    "Il suffit de remplir le formulaire",
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: SizeConfig.screenHeight * 0.06),
+                  CompleteProfileForm(),
+                  SizedBox(height: getProportionateScreenHeight(30)),
+                ],
+              ),
             ),
           ),
         ),
@@ -108,24 +112,25 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
       // Call the user's CollectionReference to add a new user
       return inscriptions
           .add({
-        'nom': p.nom, // John Doe
-        'prenom': p.prenom, // Stokes and Sons
-        'bareau_annee': p.barreau_annee ,
-        'type': p.type,
-        'email': p.email,
-        'phone_number': p.contact,
-        'pays': p.pays,
-        'hotel': p.hotel,
-        'compagnie_modeTransport': p.transport,
-        'dateArrival':p.dateArrive,
-        'dateDepart': p.dateDepart,
-        'personneContact':p.personContact,
-        'personContact_tel': p.numContact,
+        'nom': lastName, // John Doe
+        'prenom': firstName, // Stokes and Sons
+        'bareau_annee': bareau_annee ,
+        'type': dropdownValue,
+        'email': email,
+        'phone_number': phoneNumber,
+        'pays': pays,
+        'hotel': hotel,
+        'compagnie_modeTransport': transport,
+        'dateArrival':date_arrivee,
+        'dateDepart': date_depart,
+        'personneContact':personne_contact,
+        'personContact_tel': personne_contact_tel,
         'createdAt': FieldValue.serverTimestamp()
       })
           .then((value) {
         setState(() {
-          idInscription=value.id;
+         //this.idInscription=value.id;
+
         });
       })
           .catchError((error){
@@ -145,18 +150,19 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     void sucessCallback(response, context) {
       print(response);
       Navigator.pop(context);
-      registerForEvent();
+      registerForEvent;
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => SuccessScreen(
-            participant:p,
+            nom:lastName.toString(),
             amount: response['amount'],
             transactionId: response['transactionId'],
-            numero_Inscrption: idInscription,
+            numero_Inscrption: DateFormat('yyyyMMddHHmmss').format(DateTime.now()),
           ),
         ),
       );
+
     }
 
     final kkiapay_avocat = KKiaPay(
@@ -181,107 +187,122 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
       theme: "#50994a",
     );
 
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          buildFirstNameFormField(sb),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildLastNameFormField(sb),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildBarreauFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          DropdownButton<String>(
-            value: dropdownValue,
-            icon: const Icon(Icons.arrow_downward),
-            elevation: 16,
-            style: const TextStyle(color: Colors.black),
-            underline: Container(
-              height: 2,
-              color: Colors.green,
-            ),
-            onChanged: (String? newValue) {
-              setState(() {
-                dropdownValue = newValue!;
-                if(newValue == 'Avocat inscrit au barreau')
-                  typeAvocat=true;
-                else
-                  typeAvocat=false;
-              });
-            },
-            items: <String>['Avocat inscrit au barreau', 'Avocat stagiaire']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Material(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            buildFirstNameFormField(sb),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            buildLastNameFormField(sb),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-            children: [
+              children: [
 
-              Expanded(
-                  flex:4,
-                  child: Text('Votre pays d\'origne:', style: TextStyle(fontWeight: FontWeight.w500))),
-              Expanded(
-                  flex: 6,
-                  child :CountryCodePicker(
-
-                  searchDecoration: InputDecoration(
-                    labelText: "Pays d'origine",
-                    hintText: "Votre pays",
-                    // If  you are using latest version of flutter then lable text and hint text shown like this
-                    // if you r using flutter less then 1.20.* then maybe this is not working properly
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-
-                  ),
-                onChanged: (c) {
-                  print(c.name);
-                  pays = c.name;
-                },
-                initialSelection: 'BJ',
-                showFlag: true,
-                showOnlyCountryWhenClosed: true,
-              )),
-            ],
-          ),
-          Divider(color: Colors.black,),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildAddressFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildEmailFormField(sb),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildPhoneNumberFormField(sb),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildTransportFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildHotelFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildArrivee(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildDepart(),
-          buildPersonneContactFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildContactPhoneNumberFormField(),
-          FormError(errors: errors),
-          SizedBox(height: getProportionateScreenHeight(40)),
-          DefaultButton(
-            text: "S'inscrire",
-            press: () {
-              if (_formKey.currentState!.validate()) {
-                 p=Participant(nom: lastName, prenom: firstName, type: dropdownValue, barreau_annee: bareau_annee, pays: pays, email: email, contact: phoneNumber, hotel: hotel, transport: transport,dateArrive: date_arrivee, dateDepart: date_depart, personContact: personne_contact, numContact: personne_contact_tel);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => typeAvocat?kkiapay_avocat:kkiapay_stagiaire
+                Expanded(
+                    flex:3,
+                    child: Text('Catégorie d\'avocat:', style: TextStyle(fontWeight: FontWeight.w500))),
+                Expanded(
+                    flex: 7,
+                    child :DropdownButton<String>(
+                      value: dropdownValue,
+                      icon: const Icon(Icons.arrow_downward),
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.black),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.green,
                       ),
-                );
-              }
-            },
-          ),
-        ],
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                          if(newValue == 'Avocat inscrit au barreau')
+                            typeAvocat=true;
+                          else
+                            typeAvocat=false;
+                        });
+                      },
+                      items: <String>['Avocat inscrit au barreau', 'Avocat stagiaire']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),),
+              ],
+            ),
+            buildBarreauFormField(),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+              children: [
+
+                Expanded(
+                    flex:4,
+                    child: Text('Votre pays d\'origne:', style: TextStyle(fontWeight: FontWeight.w500))),
+                Expanded(
+                    flex: 6,
+                    child :CountryCodePicker(
+
+                    searchDecoration: InputDecoration(
+                      labelText: "Pays d'origine",
+                      hintText: "Votre pays",
+                      // If  you are using latest version of flutter then lable text and hint text shown like this
+                      // if you r using flutter less then 1.20.* then maybe this is not working properly
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+
+                    ),
+                  onChanged: (c) {
+                    print(c.name);
+                    pays = c.name;
+                  },
+                  initialSelection: 'BJ',
+                  showFlag: true,
+                  showOnlyCountryWhenClosed: true,
+                )),
+              ],
+            ),
+            Divider(color: Colors.black,),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            buildAddressFormField(),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            buildEmailFormField(sb),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            buildPhoneNumberFormField(sb),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            buildTransportFormField(),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            buildHotelFormField(),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            buildArrivee(),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            buildDepart(),
+            buildPersonneContactFormField(),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            buildContactPhoneNumberFormField(),
+            FormError(errors: errors),
+            SizedBox(height: getProportionateScreenHeight(40)),
+            DefaultButton(
+              text: "S'inscrire",
+              press: () {
+                if (_formKey.currentState!.validate()) {
+                   this.p=Participant(nom: lastName, prenom: firstName, type: dropdownValue, barreau_annee: bareau_annee, pays: pays, email: email, contact: phoneNumber, hotel: hotel, transport: transport,dateArrive: date_arrivee, dateDepart: date_depart, personContact: personne_contact, numContact: personne_contact_tel);
+                print(p);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => typeAvocat?kkiapay_avocat:kkiapay_stagiaire
+                        ),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
 
@@ -559,7 +580,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             context: context,
             firstDate: DateTime(2022),
             initialDate: currentValue ?? DateTime.now(),
-            lastDate: DateTime(DateTime.now().year, DateTime.now().month, 2));
+            lastDate: DateTime(DateTime.now().year, DateTime.now().month+1, 25));
         if (date != null) {
           final time = await showTimePicker(
             context: context,

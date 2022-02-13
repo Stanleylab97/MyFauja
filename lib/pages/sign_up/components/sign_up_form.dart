@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:myfauja/blocs/internet_bloc.dart';
 import 'package:myfauja/blocs/signIn_bloc.dart';
@@ -7,7 +8,6 @@ import 'package:myfauja/ui/components/default_button.dart';
 import 'package:myfauja/ui/components/form_error.dart';
 import 'package:myfauja/utils/common/constants.dart';
 import 'package:myfauja/utils/common/size_config.dart';
-import 'package:myfauja/utils/next_screen.dart';
 import 'package:myfauja/utils/snackbar.dart';
 import 'package:provider/provider.dart';
 
@@ -50,10 +50,15 @@ class _SignUpFormState extends State<SignUpForm> {
     await ib.checkInternet();
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
       FocusScope.of(context).requestFocus(new FocusNode());
       await ib.checkInternet();
       if (ib.hasInternet == false) {
-        openSnacbar(_scaffoldKey, 'Pas de connexion internet');
+        Flushbar(
+          message: 'Pas de connexion internet',
+          margin: EdgeInsets.all(8),
+          borderRadius: BorderRadius.circular(8),
+        );
       } else {
         setState(() {
           signUpStarted = true;
@@ -69,7 +74,17 @@ class _SignUpFormState extends State<SignUpForm> {
             setState(() {
               signUpStarted = false;
             });
-            openSnacbar(_scaffoldKey, sb.errorCode);
+            Flushbar(
+              message: sb.errorCode,
+              icon: Icon(
+                Icons.info_outline,
+                size: 28.0,
+                color: Colors.blue[300],
+              ),
+              duration: Duration(seconds: 5),
+              leftBarIndicatorColor: Colors.blue[300],
+            )..show(context);
+
           }
         });
       }
@@ -97,7 +112,7 @@ class _SignUpFormState extends State<SignUpForm> {
           buildConformPassFormField(),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
-          DefaultButton(
+          signUpStarted?Center(child: CircularProgressIndicator()) : DefaultButton(
             text: "Enregister",
             press: () {
               if (_formKey.currentState!.validate()) {

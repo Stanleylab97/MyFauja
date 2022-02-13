@@ -9,8 +9,11 @@ import 'profile_menu.dart';
 import 'profile_pic.dart';
 
 class Body extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+    final SignInBloc sb = context.read<SignInBloc>();
+
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Column(
@@ -23,17 +26,17 @@ class Body extends StatelessWidget {
             press: () => {},
           ),
           ProfileMenu(
-            text: "Notifications",
+            text: "Site web FAUJA",
             icon: "assets/icons/Bell.svg",
             press: () {},
           ),
           ProfileMenu(
-            text: "Paramètres",
+            text: "Contacts Fauja",
             icon: "assets/icons/Settings.svg",
             press: () {},
           ),
           ProfileMenu(
-            text: "Aide",
+            text: "Liste des participants",
             icon: "assets/icons/Question mark.svg",
             press: () {},
           ),
@@ -41,7 +44,7 @@ class Body extends StatelessWidget {
             text: "Déconnexion",
             icon: "assets/icons/Log out.svg",
             press: () async {
-              final SignInBloc sb = context.read<SignInBloc>();
+
               Navigator.pop(context);
               await context
                   .read<SignInBloc>()

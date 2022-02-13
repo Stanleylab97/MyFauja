@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class ButtonWidget extends StatelessWidget {
@@ -26,8 +26,8 @@ class ButtonWidget extends StatelessWidget {
                   () => _key.currentState!.reset(),
             );
           },
-          submittedIcon: Icon(
-            FontAwesome.phone,
+          submittedIcon: FaIcon(
+            FontAwesomeIcons.phone,
             color: Colors.blue,
           ),
         ),

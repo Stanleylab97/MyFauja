@@ -15,34 +15,38 @@ class SplashContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Spacer(),
-        Text(
-          "MyFauja",
-          style: TextStyle(
-            fontSize: getProportionateScreenWidth(36),
-            color: kPrimaryColor,
-            fontWeight: FontWeight.bold,
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+      child: Column(
+        children: <Widget>[
+          Spacer(),
+          Text(
+            "MyFauja",
+            style: TextStyle(
+              fontSize: getProportionateScreenWidth(36),
+              color: kPrimaryColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        Text(
-          text!,
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: getProportionateScreenHeight(10),),
-        Text(
-          textbody!,
-          textAlign: TextAlign.center,
-        ),
+          Text(
+            text!,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: getProportionateScreenHeight(10),),
+          Text(
+            textbody!,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 12),
+          ),
 
-        Spacer(flex: 2),
-        Image.asset(
-          image!,
-          height: getProportionateScreenHeight(265),
-          width: getProportionateScreenWidth(235),
-        ),
-      ],
+          Spacer(flex: 2),
+          Image.asset(
+            image!,
+            height: getProportionateScreenHeight(265),
+            width: getProportionateScreenWidth(235),
+          ),
+        ],
+      ),
     );
   }
 }

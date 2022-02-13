@@ -3,6 +3,7 @@ import 'package:myfauja/pages/complete_profile/complete_profile_screen.dart';
 import 'package:myfauja/pages/dashboard.dart';
 import 'package:myfauja/pages/forgot_password/forgot_password_screen.dart';
 import 'package:myfauja/pages/login_success/login_success_screen.dart';
+import 'package:myfauja/pages/menu_pages/events/participate_event.dart';
 import 'package:myfauja/pages/menu_pages/home.dart';
 import 'package:myfauja/pages/profile/profile_screen.dart';
 import 'package:myfauja/pages/sign_in/sign_in_screen.dart';
@@ -24,4 +25,6 @@ final Map<String, WidgetBuilder> routes = {
   Dashboard.routeName: (context) => Dashboard(),
   //DetailsScreen.routeName: (context) => DetailsScreen(),
   ProfileScreen.routeName: (context) => ProfileScreen(),
+
+  RegisterToEvent.routeName:(context)=> RegisterToEvent()
 };

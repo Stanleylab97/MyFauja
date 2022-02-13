@@ -12,8 +12,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 class SuccessScreen extends StatefulWidget {
   String transactionId, numero_Inscrption;
   int amount;
-  Participant participant;
-  SuccessScreen({required this.amount, required this.transactionId,required this.participant, required this.numero_Inscrption});
+  String nom;
+  SuccessScreen({required this.amount, required this.transactionId,required this.nom, required this.numero_Inscrption});
 
   @override
   _SuccessScreenState createState() => _SuccessScreenState();
@@ -94,7 +94,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
               ),
               
               SizedBox(height: getProportionateScreenHeight(25)),
-              Text("Merci à vous Me ${widget.participant.nom} et à très vite!", textAlign: TextAlign.center, style: TextStyle(fontSize: 16),),
+              Text("Merci à vous Me ${widget.nom} et à très vite!", textAlign: TextAlign.center, style: TextStyle(fontSize: 16),),
               SizedBox(height: getProportionateScreenHeight(25)),
               Text("Votre QR code vous sera demandé à l'entrée du congrès.", textAlign: TextAlign.center)
 
