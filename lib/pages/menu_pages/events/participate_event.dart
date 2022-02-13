@@ -290,8 +290,6 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
               text: "S'inscrire",
               press: () {
                 if (_formKey.currentState!.validate()) {
-                   this.p=Participant(nom: lastName, prenom: firstName, type: dropdownValue, barreau_annee: bareau_annee, pays: pays, email: email, contact: phoneNumber, hotel: hotel, transport: transport,dateArrive: date_arrivee, dateDepart: date_depart, personContact: personne_contact, numContact: personne_contact_tel);
-                print(p);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
