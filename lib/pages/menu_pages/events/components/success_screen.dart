@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:myfauja/models/participant.dart';
+import 'package:myfauja/pages/dashboard.dart';
+import 'package:myfauja/ui/components/default_button.dart';
 import 'package:myfauja/utils/common/size_config.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -67,6 +69,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
           Column(
             children: [
               Expanded(
+                flex: 8,
                 child:  Center(
                   child: RepaintBoundary(
                       key: globalKey,
@@ -96,8 +99,16 @@ class _SuccessScreenState extends State<SuccessScreen> {
               SizedBox(height: getProportionateScreenHeight(25)),
               Text("Merci à vous Me ${widget.nom} et à très vite!", textAlign: TextAlign.center, style: TextStyle(fontSize: 16),),
               SizedBox(height: getProportionateScreenHeight(25)),
-              Text("Votre QR code vous sera demandé à l'entrée du congrès.", textAlign: TextAlign.center)
+              Text("Votre QR code vous sera demandé à l'entrée du congrès.", textAlign: TextAlign.center),
+              Spacer(flex: 2),
+              DefaultButton(
+                text: "Retour à l'accueil",
+                press: () {
 
+                  Navigator.pushReplacementNamed(context, Dashboard.routeName);
+
+                },
+              ),
             ],
           ),
 

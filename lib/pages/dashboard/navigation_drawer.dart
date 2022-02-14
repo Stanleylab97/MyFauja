@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myfauja/pages/menu_pages/events/evenements.dart';
-import 'package:myfauja/pages/menu_pages/confreres.dart';
+import 'package:myfauja/pages/menu_pages/participants.dart';
 import 'package:myfauja/pages/menu_pages/external_profile.dart';
 import 'package:myfauja/pages/menu_pages/forum.dart';
 import 'package:myfauja/pages/menu_pages/home.dart';
@@ -98,9 +98,7 @@ class NavigationDrawer extends StatelessWidget {
       case 1:
         Navigator.push(context, MaterialPageRoute(builder: (context) => const Events()));
         break;
-      case 2:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Confreres()));
-        break;
+
       case 3:
         Navigator.push(context, MaterialPageRoute(builder: (context) => const Forum()));
         break;

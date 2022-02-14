@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfauja/blocs/signIn_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePic extends StatelessWidget {
   const ProfilePic({
@@ -13,6 +14,7 @@ class ProfilePic extends StatelessWidget {
   Widget build(BuildContext context) {
     final SignInBloc sb = Provider.of<SignInBloc>(context, listen: false);
 
+
     return SizedBox(
       height: 115,
       width: 115,
@@ -21,7 +23,7 @@ class ProfilePic extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(sb.firebaseLoyer.imageUrl),
+            backgroundImage: CachedNetworkImageProvider(sb.defaultUserImageUrl/*sb.firebaseLoyer!.imageUrl*/),
           ),
           // Positioned(
           //   right: -16,

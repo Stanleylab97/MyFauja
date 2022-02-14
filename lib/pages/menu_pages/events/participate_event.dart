@@ -1,13 +1,14 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:kkiapay_flutter_sdk/kkiapayWebview.dart';
+import 'package:myfauja/blocs/internet_bloc.dart';
 import 'package:myfauja/blocs/signIn_bloc.dart';
 import 'package:myfauja/models/participant.dart';
-import 'package:myfauja/pages/menu_pages/events/components/kkiapay.dart';
 import 'package:myfauja/pages/menu_pages/events/components/success_screen.dart';
 import 'package:myfauja/ui/components/custom_surfix_icon.dart';
 import 'package:myfauja/ui/components/default_button.dart';
@@ -35,8 +36,8 @@ class _RegisterToEventState extends State<RegisterToEvent> {
         child: SizedBox(
           width: double.infinity,
           child: Padding(
-            padding:
-                EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+            padding: EdgeInsets.symmetric(
+                horizontal: getProportionateScreenWidth(20)),
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -78,17 +79,24 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   final List<String?> errors = [];
   String? firstName;
   String? lastName;
-  String? pays="Bénin";
+  String? pays = "Bénin";
   String? phoneNumber, personne_contact_tel;
-  String? bareau_annee, adresse,email,transport,hotel,personne_contact,date_depart,date_arrivee;
+  String? bareau_annee,
+      adresse,
+      email,
+      transport,
+      hotel,
+      personne_contact,
+      date_depart,
+      date_arrivee;
   bool typeAvocat = true;
   String dropdownValue = 'Avocat inscrit au barreau';
   late Participant p;
   late String idInscription;
-  CollectionReference inscriptions = FirebaseFirestore.instance.collection('Events').doc("congresVI").collection("inscriptions");
-
-
-
+  CollectionReference inscriptions = FirebaseFirestore.instance
+      .collection('Events')
+      .doc("congresVI")
+      .collection("inscriptions");
 
   void addError({String? error}) {
     if (!errors.contains(error))
@@ -107,62 +115,23 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   @override
   Widget build(BuildContext context) {
     final SignInBloc sb = Provider.of<SignInBloc>(context, listen: false);
-
-    Future<void> registerForEvent() {
-      // Call the user's CollectionReference to add a new user
-      return inscriptions
-          .add({
-        'nom': lastName, // John Doe
-        'prenom': firstName, // Stokes and Sons
-        'bareau_annee': bareau_annee ,
-        'type': dropdownValue,
-        'email': email,
-        'phone_number': phoneNumber,
-        'pays': pays,
-        'hotel': hotel,
-        'compagnie_modeTransport': transport,
-        'dateArrival':date_arrivee,
-        'dateDepart': date_depart,
-        'personneContact':personne_contact,
-        'personContact_tel': personne_contact_tel,
-        'createdAt': FieldValue.serverTimestamp()
-      })
-          .then((value) {
-        setState(() {
-         //this.idInscription=value.id;
-
-        });
-      })
-          .catchError((error){
-        Flushbar(
-          message: "Une erreur s'est produite",
-          icon: Icon(
-            Icons.info_outline,
-            size: 28.0,
-            color: Colors.blue[300],
-          ),
-          duration: Duration(seconds: 5),
-          leftBarIndicatorColor: Colors.blue[300],
-        )..show(context);
-      });
-    }
+    final InternetBloc ib = Provider.of<InternetBloc>(context, listen: false);
 
     void sucessCallback(response, context) {
       print(response);
       Navigator.pop(context);
-      registerForEvent;
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => SuccessScreen(
-            nom:lastName.toString(),
+            nom: lastName.toString(),
             amount: response['amount'],
             transactionId: response['transactionId'],
-            numero_Inscrption: DateFormat('yyyyMMddHHmmss').format(DateTime.now()),
+            numero_Inscrption:
+            DateFormat('yyyyMMddHHmmss').format(DateTime.now()),
           ),
         ),
       );
-
     }
 
     final kkiapay_avocat = KKiaPay(
@@ -172,7 +141,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
       sandbox: false,
       apikey: '0866da3bacd24a50be86e5bed2854c77e80bcfce',
       callback: sucessCallback,
-      name: lastName.toString()+" "+firstName.toString(),
+      name: lastName.toString() + " " + firstName.toString(),
       theme: "#50994a",
     );
 
@@ -187,6 +156,55 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
       theme: "#50994a",
     );
 
+    registerForEvent() async {
+      await ib.checkInternet();
+      if (ib.hasInternet == false) {
+        Flushbar(
+          message: 'Pas de connexion internet',
+          margin: EdgeInsets.all(8),
+          borderRadius: BorderRadius.circular(8),
+        );
+      } else {
+        // Call the user's CollectionReference to add a new user
+        inscriptions.add({
+          'nom': lastName, // John Doe
+          'prenom': firstName, // Stokes and Sons
+          'bareau_annee': bareau_annee,
+          'type': dropdownValue,
+          'email': email,
+          'phone_number': phoneNumber,
+          'pays': pays,
+          'hotel': hotel,
+          'compagnie_modeTransport': transport,
+          'dateArrival': date_arrivee,
+          'dateDepart': date_depart,
+          'personneContact': personne_contact,
+          'personContact_tel': personne_contact_tel,
+          'createdAt': FieldValue.serverTimestamp(),
+          'uid': FirebaseAuth.instance.currentUser!.uid
+        }).then((value) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                typeAvocat ? kkiapay_avocat : kkiapay_stagiaire),
+          );
+        }).catchError((error) {
+          Flushbar(
+            message: "Une erreur s'est produite pendant l'enregistrement",
+            icon: Icon(
+              Icons.info_outline,
+              size: 28.0,
+              color: Colors.blue[300],
+            ),
+            duration: Duration(seconds: 5),
+            leftBarIndicatorColor: Colors.blue[300],
+          )..show(context);
+        });
+      }
+    }
+
+
     return Material(
       child: Form(
         key: _formKey,
@@ -198,75 +216,77 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             SizedBox(height: getProportionateScreenHeight(30)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
               children: [
-
                 Expanded(
-                    flex:3,
-                    child: Text('Catégorie d\'avocat:', style: TextStyle(fontWeight: FontWeight.w500))),
+                    flex: 3,
+                    child: Text('Catégorie d\'avocat:',
+                        style: TextStyle(fontWeight: FontWeight.w500))),
                 Expanded(
-                    flex: 7,
-                    child :DropdownButton<String>(
-                      value: dropdownValue,
-                      icon: const Icon(Icons.arrow_downward),
-                      elevation: 16,
-                      style: const TextStyle(color: Colors.black),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.green,
-                      ),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                          if(newValue == 'Avocat inscrit au barreau')
-                            typeAvocat=true;
-                          else
-                            typeAvocat=false;
-                        });
-                      },
-                      items: <String>['Avocat inscrit au barreau', 'Avocat stagiaire']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),),
+                  flex: 7,
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.black),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.green,
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                        if (newValue == "Avocat inscrit au barreau")
+                          typeAvocat = true;
+                        else
+                          typeAvocat = false;
+                      });
+                    },
+                    items: <String>[
+                      'Avocat inscrit au barreau',
+                      'Avocat stagiaire',
+                      'Autre'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
               ],
             ),
             buildBarreauFormField(),
             SizedBox(height: getProportionateScreenHeight(30)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
               children: [
-
                 Expanded(
-                    flex:4,
-                    child: Text('Votre pays d\'origne:', style: TextStyle(fontWeight: FontWeight.w500))),
+                    flex: 4,
+                    child: Text('Votre pays d\'origne:',
+                        style: TextStyle(fontWeight: FontWeight.w500))),
                 Expanded(
                     flex: 6,
-                    child :CountryCodePicker(
-
-                    searchDecoration: InputDecoration(
-                      labelText: "Pays d'origine",
-                      hintText: "Votre pays",
-                      // If  you are using latest version of flutter then lable text and hint text shown like this
-                      // if you r using flutter less then 1.20.* then maybe this is not working properly
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-
-                    ),
-                  onChanged: (c) {
-                    print(c.name);
-                    pays = c.name;
-                  },
-                  initialSelection: 'BJ',
-                  showFlag: true,
-                  showOnlyCountryWhenClosed: true,
-                )),
+                    child: CountryCodePicker(
+                      searchDecoration: InputDecoration(
+                        labelText: "Pays d'origine",
+                        hintText: "Votre pays",
+                        // If  you are using latest version of flutter then lable text and hint text shown like this
+                        // if you r using flutter less then 1.20.* then maybe this is not working properly
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      onChanged: (c) {
+                        print(c.name);
+                        pays = c.name;
+                      },
+                      initialSelection: 'BJ',
+                      showFlag: true,
+                      showOnlyCountryWhenClosed: true,
+                    )),
               ],
             ),
-            Divider(color: Colors.black,),
+            Divider(
+              color: Colors.black,
+            ),
             SizedBox(height: getProportionateScreenHeight(30)),
             buildAddressFormField(),
             SizedBox(height: getProportionateScreenHeight(30)),
@@ -290,12 +310,9 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
               text: "S'inscrire",
               press: () {
                 if (_formKey.currentState!.validate()) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => typeAvocat?kkiapay_avocat:kkiapay_stagiaire
-                        ),
-                  );
+                  _formKey.currentState!.save();
+                  registerForEvent();
+
                 }
               },
             ),
@@ -303,10 +320,6 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         ),
       ),
     );
-
-
-
-
   }
 
   TextFormField buildAddressFormField() {
@@ -363,7 +376,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildEmailFormField(SignInBloc sb) {
     return TextFormField(
-      initialValue: sb.firebaseLoyer.loyerDataGotFromAPI.email,
+      initialValue: sb.firebaseLoyer!.loyerDataGotFromAPI.email,
       onSaved: (newValue) => email = newValue,
       onChanged: (value) {
         if (value.isNotEmpty) {
@@ -442,7 +455,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildPhoneNumberFormField(SignInBloc sb) {
     return TextFormField(
-      initialValue:  sb.firebaseLoyer.loyerDataGotFromAPI.contact,
+      initialValue: sb.firebaseLoyer!.loyerDataGotFromAPI.contact,
       keyboardType: TextInputType.phone,
       onSaved: (newValue) => phoneNumber = newValue,
       onChanged: (value) {
@@ -499,7 +512,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildLastNameFormField(SignInBloc sb) {
     return TextFormField(
-      initialValue: sb.firebaseLoyer.loyerDataGotFromAPI.nom,
+      initialValue: sb.firebaseLoyer!.loyerDataGotFromAPI.nom,
       onSaved: (newValue) => lastName = newValue,
       decoration: InputDecoration(
         labelText: "Nom",
@@ -514,7 +527,6 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildPersonneContactFormField() {
     return TextFormField(
-
       onSaved: (newValue) => lastName = newValue,
       decoration: InputDecoration(
         labelText: "Personne à contacter",
@@ -529,7 +541,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildFirstNameFormField(SignInBloc sb) {
     return TextFormField(
-      initialValue: sb.firebaseLoyer.loyerDataGotFromAPI.prenom,
+      initialValue: sb.firebaseLoyer!.loyerDataGotFromAPI.prenom,
       onSaved: (newValue) => firstName = newValue,
       onChanged: (value) {
         if (value.isNotEmpty) {
@@ -564,21 +576,21 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         // If  you are using latest version of flutter then lable text and hint text shown like this
         // if you r using flutter less then 1.20.* then maybe this is not working properly
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: FaIcon(FontAwesomeIcons.planeArrival) ,
+        suffixIcon: FaIcon(FontAwesomeIcons.planeArrival),
       ),
       onChanged: (value) {
         print(value);
-        date_arrivee=value.toString();
+        date_arrivee = value.toString();
       },
-    initialValue: DateTime.now(),
+      initialValue: DateTime.now(),
       format: format,
-
       onShowPicker: (context, currentValue) async {
         final date = await showDatePicker(
             context: context,
             firstDate: DateTime(2022),
             initialDate: currentValue ?? DateTime.now(),
-            lastDate: DateTime(DateTime.now().year, DateTime.now().month+1, 25));
+            lastDate:
+                DateTime(DateTime.now().year, DateTime.now().month + 1, 25));
         if (date != null) {
           final time = await showTimePicker(
             context: context,
@@ -601,11 +613,11 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         // If  you are using latest version of flutter then lable text and hint text shown like this
         // if you r using flutter less then 1.20.* then maybe this is not working properly
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: FaIcon(FontAwesomeIcons.planeDeparture) ,
+        suffixIcon: FaIcon(FontAwesomeIcons.planeDeparture),
       ),
       onChanged: (value) {
         print(value);
-        date_depart=value.toString();
+        date_depart = value.toString();
       },
       initialValue: DateTime.now(),
       format: format,
@@ -614,7 +626,8 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             context: context,
             firstDate: DateTime(2022),
             initialDate: currentValue ?? DateTime.now(),
-            lastDate: DateTime(DateTime.now().year, DateTime.now().month+1, 25));
+            lastDate:
+                DateTime(DateTime.now().year, DateTime.now().month + 1, 25));
         if (date != null) {
           final time = await showTimePicker(
             context: context,
@@ -628,4 +641,3 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     );
   }
 }
-

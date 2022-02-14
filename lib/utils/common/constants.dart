@@ -32,7 +32,7 @@ const String kPassNullError = "Mot de passe vide";
 const String kShortPassError = "Mot de passe trop court";
 const String kMatchPassError = "Mots de non conformes";
 const String kNamelNullError = "Veuillez entrer votre nom ";
-const String kPhoneNumberNullError = "Mot de passe vide";
+const String kPhoneNumberNullError = "Numéro de teléphone vide";
 const String kSpecialityNullError = "Veuillez définir votre spécialité";
 
 

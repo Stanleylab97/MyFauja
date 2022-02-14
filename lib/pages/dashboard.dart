@@ -8,6 +8,8 @@ import 'package:myfauja/pages/profile/components/profile_pic.dart';
 import 'package:myfauja/pages/profile/profile_screen.dart';
 import 'package:myfauja/utils/common/size_config.dart';
 
+import 'menu_pages/events/evenements.dart';
+
 class Dashboard extends StatefulWidget {
   static String routeName = "/home";
 
@@ -41,7 +43,7 @@ class _DashboardState extends State<Dashboard> {
       style: optionStyle,
     )),
 
-     EventDetails(),
+    Events(),
 
      ProfileScreen()
   ];
@@ -84,13 +86,13 @@ class _DashboardState extends State<Dashboard> {
 
                 GButton(
                   icon: FontAwesomeIcons.calendar,
-                  text: '6e congrès',
+                  text: 'Évènement',
                   textStyle: TextStyle(fontSize: 14),
                 ),
 
                 GButton(
                   icon: LineIcons.user,
-                  text: 'Mon compte',
+                  text: 'Paramètres',
                   textStyle: TextStyle(fontSize: 14),
                 ),
               ],

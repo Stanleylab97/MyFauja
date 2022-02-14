@@ -14,6 +14,7 @@ import 'package:myfauja/utils/common/size_config.dart';
 import 'package:myfauja/utils/next_screen.dart';
 import 'package:myfauja/utils/snackbar.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignForm extends StatefulWidget {
   late final String? tag;
@@ -72,19 +73,21 @@ class _SignFormState extends State<SignForm> {
         });
         sb.signInwithEmailPassword(email, password).then((_) async {
           if (sb.hasError == false) {
-            sb
-                .getUserDatafromFirebase(sb.firebaseLoyer.uid)
-                //.then((value) => sb.guestSignout())
-                .then((value) => sb
-                    .saveDataToSP()
-                    .then((value) => sb.setSignIn().then((value) {
-                          setState(() {
-                            signInComplete = true;
-                            signInStart = false;
-                          });
-                          print("SAVED");
-                          afterSignIn();
-                        })));
+            final SharedPreferences sp = await SharedPreferences.getInstance();
+
+            //print("TEST: ${val.uid}");
+          // await sp.setString('uid', val.uid);
+            //print("TEST: USER LOGGED IN");
+            // sb.getUserDatafromFirebase(sb.firebaseLoyer!.uid).then((value) =>
+            //     sb.saveDataToSP().then((value) => sb.setSignIn().then((value) {
+            //           setState(() {
+                         signInComplete = true;
+            //             signInStart = false;
+            //           });
+            signInStart = false;
+            print("SAVED");
+            afterSignIn();
+            //  })));
           } else {
             setState(() {
               signInStart = false;
