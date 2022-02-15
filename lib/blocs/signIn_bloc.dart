@@ -114,7 +114,6 @@ class SignInBloc extends ChangeNotifier {
           await sp.setString('specialite', documentSnapshot['speciality']);
           await sp.setString('userCategory', documentSnapshot['userCategory']);
           await sp.setString('status', documentSnapshot['status']);
-
         } else {
           print('Document does not exist on the database');
         }
@@ -233,6 +232,31 @@ class SignInBloc extends ChangeNotifier {
         sp.getString('sign_in_provider').toString();
 
     notifyListeners();
+  }
+
+ FirebaseLoyer? getUserDatafromFirebaseInApp(uid)  {
+     FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .get()
+        .then((DocumentSnapshot snap) {
+      var avocat = LoyerAppData(
+          nom: snap['surname'],
+          prenom: snap['firstname'],
+          email: snap['email'],
+          specialite: snap['speciality'],
+          country_code: snap['country'],
+          contact: snap['contact'],
+          cabinet: snap['cabinet']);
+      return FirebaseLoyer(
+          loyerDataGotFromAPI: avocat,
+          uid: snap['uid'],
+          status: snap['status'],
+          description: snap['description'],
+          imageUrl: snap['profileUrl'],
+          signInProvider: snap['provider'],
+          usercategory: snap['userCategory']);
+    });
   }
 
   Future getUserDatafromFirebase(uid) async {

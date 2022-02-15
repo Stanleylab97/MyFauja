@@ -68,8 +68,7 @@ class _BodyState extends State<_Body> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return  Column(
         children: [
           Expanded(
             flex: 4,
@@ -666,7 +665,7 @@ class _BodyState extends State<_Body> {
 
 
         ],
-      ),
+
     );
   }
 }

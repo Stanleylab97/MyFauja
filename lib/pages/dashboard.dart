@@ -34,14 +34,10 @@ class _DashboardState extends State<Dashboard> {
     //_scrollController.dispose();
     super.dispose();
   }
-  int _selectedIndex = 1 ;
+  int _selectedIndex = 0 ;
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
   static const List<Widget> _widgetOptions = <Widget>[
-    Center(child:Text(
-      'Fil d\'actualité',
-      style: optionStyle,
-    )),
 
     Events(),
 
@@ -79,10 +75,7 @@ class _DashboardState extends State<Dashboard> {
               tabBackgroundColor: Colors.grey[100]!,
               color: Colors.black,
               tabs: [
-                GButton(
-                  icon: LineIcons.home,
-                  text: 'Actualité',
-                ),
+
 
                 GButton(
                   icon: FontAwesomeIcons.calendar,

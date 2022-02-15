@@ -42,10 +42,10 @@ class Participant {
       contact: json['phone_number'],
       dateArrive: (json['dateArrival'] as Timestamp).toDate(),
       dateDepart: (json['dateDepart'] as Timestamp).toDate(),
-      barreau_annee: json['pays'],
+      barreau_annee: "" ,//json['barreau_annee']== null ? "":json['barreau_annee'],
       hotel: json['hotel'],
       transport: json['compagnie_modeTransport'],
       numContact: json['personContact_tel'],
-      personContact: json['personneContact'],
+      personContact: "",  //json['personneContact'] == null?"":json['personneContact'],
       createdAt: (json['createdAt'] as Timestamp).toDate());
 }

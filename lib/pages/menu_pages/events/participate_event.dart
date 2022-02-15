@@ -17,6 +17,7 @@ import 'package:myfauja/utils/common/constants.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:provider/provider.dart';
 
+import '../../../models/firebase_loyer.dart';
 import '../../../utils/common/size_config.dart';
 
 class RegisterToEvent extends StatefulWidget {
@@ -113,9 +114,17 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   }
 
   @override
+  void initState() {
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final SignInBloc sb = Provider.of<SignInBloc>(context, listen: false);
     final InternetBloc ib = Provider.of<InternetBloc>(context, listen: false);
+    FirebaseLoyer? loyer=sb.getUserDatafromFirebaseInApp(FirebaseAuth.instance.currentUser!.uid);
+
 
     void sucessCallback(response, context) {
       print(response);
@@ -205,14 +214,50 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     }
 
 
+
     return Material(
       child: Form(
         key: _formKey,
         child: Column(
           children: [
-            buildFirstNameFormField(sb),
+            TextFormField(
+              initialValue: loyer?.loyerDataGotFromAPI.nom,
+              onSaved: (newValue) => lastName = newValue,
+              decoration: InputDecoration(
+                labelText: "Nom",
+                hintText: "Quel est votre nom?",
+                // If  you are using latest version of flutter then lable text and hint text shown like this
+                // if you r using flutter less then 1.20.* then maybe this is not working properly
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/User.svg"),
+              ),
+            ),
             SizedBox(height: getProportionateScreenHeight(30)),
-            buildLastNameFormField(sb),
+            TextFormField(
+              initialValue: loyer?.loyerDataGotFromAPI.prenom,
+              onSaved: (newValue) => firstName = newValue,
+              onChanged: (value) {
+                if (value.isNotEmpty) {
+                  removeError(error: kNamelNullError);
+                }
+                return null;
+              },
+              validator: (value) {
+                if (value!.isEmpty) {
+                  addError(error: kNamelNullError);
+                  return "";
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                labelText: "Prénoms",
+                hintText: "Entrez votre prénoms",
+                // If  you are using latest version of flutter then lable text and hint text shown like this
+                // if you r using flutter less then 1.20.* then maybe this is not working properly
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/User.svg"),
+              ),
+            ),
             SizedBox(height: getProportionateScreenHeight(30)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -290,9 +335,57 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             SizedBox(height: getProportionateScreenHeight(30)),
             buildAddressFormField(),
             SizedBox(height: getProportionateScreenHeight(30)),
-            buildEmailFormField(sb),
+            TextFormField(
+              initialValue: loyer?.loyerDataGotFromAPI.email,
+              onSaved: (newValue) => email = newValue,
+              onChanged: (value) {
+                if (value.isNotEmpty) {
+                  removeError(error: 'Entrez votre e-mail');
+                }
+                return null;
+              },
+              validator: (value) {
+                if (value!.isEmpty) {
+                  addError(error: "E-mail vide");
+                  return "";
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                labelText: "Adresse e-mail",
+                hintText: "Ex: cossi@exemple.com",
+                // If  you are using latest version of flutter then lable text and hint text shown like this
+                // if you r using flutter less then 1.20.* then maybe this is not working properly
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+            ),
             SizedBox(height: getProportionateScreenHeight(30)),
-            buildPhoneNumberFormField(sb),
+            TextFormField(
+              initialValue: loyer?.loyerDataGotFromAPI.contact,
+              keyboardType: TextInputType.phone,
+              onSaved: (newValue) => phoneNumber = newValue,
+              onChanged: (value) {
+                if (value.isNotEmpty) {
+                  removeError(error: kPhoneNumberNullError);
+                }
+                return null;
+              },
+              validator: (value) {
+                if (value!.isEmpty) {
+                  addError(error: kPhoneNumberNullError);
+                  return "";
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                labelText: "Numéro de téléphone",
+                hintText: "Ex: +229XXXXXXXX",
+                // If  you are using latest version of flutter then lable text and hint text shown like this
+                // if you r using flutter less then 1.20.* then maybe this is not working properly
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Phone.svg"),
+              ),
+            ),
             SizedBox(height: getProportionateScreenHeight(30)),
             buildTransportFormField(),
             SizedBox(height: getProportionateScreenHeight(30)),
@@ -351,19 +444,17 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   TextFormField buildBarreauFormField() {
     return TextFormField(
       onSaved: (newValue) => bareau_annee = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: 'Veuillez définir votre barreau');
-        }
-        return null;
+
+        onChanged: (value) {
+          if (value.isEmpty) {
+            setState(() {
+              bareau_annee="";
+            });
+
+          }
+          return null;
       },
-      validator: (value) {
-        if (value!.isEmpty) {
-          addError(error: "Barreau vide");
-          return "";
-        }
-        return null;
-      },
+
       decoration: InputDecoration(
         labelText: "Barreau & Année serment",
         hintText: "Ex: Barreau de Cotonou/2016",
@@ -374,32 +465,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     );
   }
 
-  TextFormField buildEmailFormField(SignInBloc sb) {
-    return TextFormField(
-      initialValue: sb.firebaseLoyer!.loyerDataGotFromAPI.email,
-      onSaved: (newValue) => email = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: 'Entrez votre e-mail');
-        }
-        return null;
-      },
-      validator: (value) {
-        if (value!.isEmpty) {
-          addError(error: "E-mail vide");
-          return "";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        labelText: "Adresse e-mail",
-        hintText: "Ex: cossi@exemple.com",
-        // If  you are using latest version of flutter then lable text and hint text shown like this
-        // if you r using flutter less then 1.20.* then maybe this is not working properly
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-      ),
-    );
-  }
+
 
   TextFormField buildTransportFormField() {
     return TextFormField(
@@ -453,34 +519,6 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     );
   }
 
-  TextFormField buildPhoneNumberFormField(SignInBloc sb) {
-    return TextFormField(
-      initialValue: sb.firebaseLoyer!.loyerDataGotFromAPI.contact,
-      keyboardType: TextInputType.phone,
-      onSaved: (newValue) => phoneNumber = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kPhoneNumberNullError);
-        }
-        return null;
-      },
-      validator: (value) {
-        if (value!.isEmpty) {
-          addError(error: kPhoneNumberNullError);
-          return "";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        labelText: "Numéro de téléphone",
-        hintText: "Ex: +229XXXXXXXX",
-        // If  you are using latest version of flutter then lable text and hint text shown like this
-        // if you r using flutter less then 1.20.* then maybe this is not working properly
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Phone.svg"),
-      ),
-    );
-  }
 
   TextFormField buildContactPhoneNumberFormField() {
     return TextFormField(
@@ -510,20 +548,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     );
   }
 
-  TextFormField buildLastNameFormField(SignInBloc sb) {
-    return TextFormField(
-      initialValue: sb.firebaseLoyer!.loyerDataGotFromAPI.nom,
-      onSaved: (newValue) => lastName = newValue,
-      decoration: InputDecoration(
-        labelText: "Nom",
-        hintText: "Quel est votre nom?",
-        // If  you are using latest version of flutter then lable text and hint text shown like this
-        // if you r using flutter less then 1.20.* then maybe this is not working properly
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/User.svg"),
-      ),
-    );
-  }
+
 
   TextFormField buildPersonneContactFormField() {
     return TextFormField(
@@ -539,33 +564,6 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     );
   }
 
-  TextFormField buildFirstNameFormField(SignInBloc sb) {
-    return TextFormField(
-      initialValue: sb.firebaseLoyer!.loyerDataGotFromAPI.prenom,
-      onSaved: (newValue) => firstName = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kNamelNullError);
-        }
-        return null;
-      },
-      validator: (value) {
-        if (value!.isEmpty) {
-          addError(error: kNamelNullError);
-          return "";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        labelText: "Prénoms",
-        hintText: "Entrez votre prénoms",
-        // If  you are using latest version of flutter then lable text and hint text shown like this
-        // if you r using flutter less then 1.20.* then maybe this is not working properly
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/User.svg"),
-      ),
-    );
-  }
 
   DateTimeField buildArrivee() {
     final format = DateFormat("dd/MM/yyyy kk:mm");

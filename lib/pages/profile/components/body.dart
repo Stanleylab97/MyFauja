@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myfauja/blocs/signIn_bloc.dart';
+import 'package:myfauja/pages/menu_pages/contacts.dart';
 import 'package:myfauja/pages/menu_pages/participants.dart';
 import 'package:myfauja/pages/sign_in/sign_in_screen.dart';
 import 'package:myfauja/utils/next_screen.dart';
@@ -42,6 +43,9 @@ class Body extends StatelessWidget {
           ProfileMenu(
             text: "Contacts Fauja",
             icon: "assets/icons/Settings.svg",
+            press: () =>  Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>  Contacts()))
           ),
           ProfileMenu(
             text: "Liste des participants",

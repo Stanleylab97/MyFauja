@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myfauja/models/participant.dart';
+import 'package:myfauja/utils/common/size_config.dart';
 
 class Participants extends StatefulWidget {
   const Participants({Key? key}) : super(key: key);
@@ -13,90 +14,44 @@ class Participants extends StatefulWidget {
 }
 
 class _ParticipantsState extends State<Participants> {
-  var transactionHeading = Padding(
-    padding: EdgeInsets.symmetric(
-      horizontal: 5,
-    ).copyWith(
-      top: 5,
-      bottom: 5,
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(
-          'Transactions',
-          style: TextStyle(
-            fontSize: 20,
-            color: Color(0xFF151C2A),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    ),
-  );
+  String type="";
 
-  SliverPadding _buildHeader() {
-    return SliverPadding(
-      padding: const EdgeInsets.all(5.0),
-      sliver: SliverToBoxAdapter(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Point des inscriptons',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 15.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text('Total perçu:')
-          ],
-        ),
-      ),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
     Stream<List<Participant>> readAvocats() => FirebaseFirestore.instance
         .collection('Events')
         .doc("congresVI")
-        .collection("inscriptions").where("type", isEqualTo: "")
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Participant.fromJson(doc.data()))
-            .toList());
-
-    Stream<List<Participant>> readStagiaire() => FirebaseFirestore.instance
-        .collection('Events')
-        .doc("congresVI")
-        .collection("inscriptions").where("type", isEqualTo: "")
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Participant.fromJson(doc.data()))
-            .toList());
-
-    Stream<List<Participant>> readAutres() => FirebaseFirestore.instance
-        .collection('Events')
-        .doc("congresVI")
         .collection("inscriptions")
         .snapshots()
         .map((snapshot) => snapshot.docs
-        .map((doc) => Participant.fromJson(doc.data()))
-        .toList());
+            .map((doc) => Participant.fromJson(doc.data()))
+            .toList());
 
-    Widget buildParticipant(Participant participant) => ListTile(
+   String getInscrits()  {
+
+    return  FirebaseFirestore.instance
+         .collection('Events')
+         .doc("congresVI")
+         .collection("inscriptions")
+         .snapshots().length.toString();
+
+    }
+
+
+
+    Widget buildParticipant(Participant? participant) => ListTile(
           leading: CircleAvatar(
             child: FaIcon(FontAwesomeIcons.user),
           ),
-          title: Text("${participant.nom} ${participant.nom}"),
+          title: Text("${participant?.nom} ${participant?.nom}"),
           subtitle: Text(
-              "${participant.pays} ${participant.createdAt!.toIso8601String()}"),
+              "${participant?.pays} ${participant!.createdAt!.toIso8601String()}"),
         );
 
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.green,
@@ -119,7 +74,7 @@ class _ParticipantsState extends State<Participants> {
           body: Padding(
             padding: EdgeInsets.only(left: 5, right:5, top: 5),
             child: Column(children: [
-              _buildHeader(),
+              //_buildHeader(),
               Container(
                   decoration: BoxDecoration(
                       color: Colors.black26,
@@ -140,9 +95,8 @@ class _ParticipantsState extends State<Participants> {
                         labelColor: Colors.black,
                         unselectedLabelColor: Colors.white,
                         tabs: <Widget>[
-                          Text('Avocats'),
-                          Text('Stagiaires', style: TextStyle(fontSize: 12)),
-                          Text('Autres'),
+                          Text('Participants'),
+                          Text('Encaissements', style: TextStyle(fontSize: 12)),
                         ],
                       ))),
               SizedBox(height: 10),
@@ -154,10 +108,7 @@ class _ParticipantsState extends State<Participants> {
                         child: StreamBuilder<List<Participant>>(
                             stream: readAvocats(),
                             builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return Text(
-                                    'Veuillez réessayer plus tard. Un léger soucis de connexion');
-                              }
+
 
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
@@ -172,86 +123,75 @@ class _ParticipantsState extends State<Participants> {
                                         Text("Pas d'inscrits pour le moment"));
                               }
 
-                              if (snapshot.hasError) {
-                                return Center(
-                                    child: Text('Something went wrong'));
-                              }
+                              // if (snapshot.hasError) {
+                              //   return Center(
+                              //       child: Text('Erreur de lecture'));
+                              // }
 
                               final participants = snapshot.data!;
 
-                              return ListView(
-                                  children: participants
-                                      .map(buildParticipant)
-                                      .toList());
+                              print(participants);
+
+                              return Center(child: Text("En cours de maintenance"));
+                              // return ListView(
+                              //     children: participants
+                              //         .map(buildParticipant)
+                              //         .toList());
                             })),
+
                     Expanded(
-                        child: StreamBuilder<List<Participant>>(
-                            stream: readAvocats(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return Text(
-                                    'Veuillez réessayer plus tard. Un léger soucis de connexion');
-                              }
+                        child: Card(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
 
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              }
+                              children: [
+                            Padding(
+                            padding: const EdgeInsets.only(left: 5.0),
+                            child: Align(
+                                alignment: Alignment.topCenter,
+                                child: CircleAvatar(
+                                radius: getProportionateScreenHeight(70),
+                                backgroundColor: Colors.green,
+                                child: CircleAvatar(
+                                  radius: getProportionateScreenHeight(60),
+                                  backgroundColor: Colors.white,
+                                  child:
+                                  CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    radius: 50,
+                                    child: FaIcon(FontAwesomeIcons.getPocket, color: Colors.green, size: 40,),
+                                  ))))),
 
-                              if (snapshot.connectionState ==
-                                  ConnectionState.none) {
-                                return Center(
-                                    child:
-                                        Text("Pas d'inscrits pour le moment"));
-                              }
+                                SizedBox(height: getProportionateScreenHeight(50),),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20, right: 20 ),
+                                  child: Column(
 
-                              if (snapshot.hasError) {
-                                return Center(
-                                    child: Text('Something went wrong'));
-                              }
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Nombre inscrits : 20',
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 20,),
+                                      Text('Total perçu: 1000000 FCFA',style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),)
+                                    ],
+                                  ),
+                                ),
 
-                              final participants = snapshot.data!;
+                              ],
+                            ),
+                          ),
+                        )
 
-                              return ListView(
-                                  children: participants
-                                      .map(buildParticipant)
-                                      .toList());
-                            })),
-                    Expanded(
-                        child: StreamBuilder<List<Participant>>(
-                            stream: readAvocats(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return Text(
-                                    'Veuillez réessayer plus tard. Un léger soucis de connexion');
-                              }
-
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              }
-
-                              if (snapshot.connectionState ==
-                                  ConnectionState.none) {
-                                return Center(
-                                    child:
-                                    Text("Pas d'inscrits pour le moment"));
-                              }
-
-                              if (snapshot.hasError) {
-                                return Center(
-                                    child: Text('Something went wrong'));
-                              }
-
-                              final participants = snapshot.data!;
-
-                              return ListView(
-                                  children: participants
-                                      .map(buildParticipant)
-                                      .toList());
-                            })),
                   ],
                 ),
               )
