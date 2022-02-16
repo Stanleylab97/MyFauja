@@ -552,7 +552,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildPersonneContactFormField() {
     return TextFormField(
-      onSaved: (newValue) => lastName = newValue,
+      onSaved: (newValue) => personne_contact = newValue,
       decoration: InputDecoration(
         labelText: "Personne à contacter",
         hintText: "Ex: TOTO Marvin",

@@ -40,12 +40,12 @@ class Participant {
       pays: json['pays'],
       email: json['email'],
       contact: json['phone_number'],
-      dateArrive: (json['dateArrival'] as Timestamp).toDate(),
-      dateDepart: (json['dateDepart'] as Timestamp).toDate(),
-      barreau_annee: "" ,//json['barreau_annee']== null ? "":json['barreau_annee'],
+      dateArrive: json['dateArrival'] == null ? DateTime.now():(json['dateArrival'] as Timestamp).toDate(),
+      dateDepart:  json['dateDepart'] == null ? DateTime.now() : (json['dateDepart'] as Timestamp).toDate(),
+      barreau_annee: json['barreau_annee']== null ? "":json['barreau_annee'],
       hotel: json['hotel'],
       transport: json['compagnie_modeTransport'],
-      numContact: json['personContact_tel'],
-      personContact: "",  //json['personneContact'] == null?"":json['personneContact'],
+      numContact: json['personContact_tel'] == null ? "" : json['personContact_tel'] ,
+      personContact: json['personneContact'] == null ? "": json['personneContact'],
       createdAt: (json['createdAt'] as Timestamp).toDate());
 }

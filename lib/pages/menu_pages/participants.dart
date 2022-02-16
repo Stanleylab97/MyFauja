@@ -15,8 +15,22 @@ class Participants extends StatefulWidget {
 
 class _ParticipantsState extends State<Participants> {
   String type="";
+  int n=1;
 
+@override
+  void initState() {
+  FirebaseFirestore.instance
+      .collection('Events')
+      .doc("congresVI")
+      .collection("inscriptions")
+      .get().then((QuerySnapshot querySnapshot){
+    setState(() {
+      n=querySnapshot.docs.length;
+    });
 
+  });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,23 +45,29 @@ class _ParticipantsState extends State<Participants> {
 
    String getInscrits()  {
 
-    return  FirebaseFirestore.instance
+    String x= FirebaseFirestore.instance
          .collection('Events')
          .doc("congresVI")
          .collection("inscriptions")
          .snapshots().length.toString();
-
+     return x;
     }
 
 
 
-    Widget buildParticipant(Participant? participant) => ListTile(
+    Widget buildParticipant(Participant participant) => ListTile(
           leading: CircleAvatar(
             child: FaIcon(FontAwesomeIcons.user),
           ),
-          title: Text("${participant?.nom} ${participant?.nom}"),
-          subtitle: Text(
-              "${participant?.pays} ${participant!.createdAt!.toIso8601String()}"),
+          title: Text("${participant.nom} ${participant.prenom}"),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                  "${participant.pays}"),
+              Text("${participant.createdAt!.toIso8601String()}")
+            ],
+          ),
         );
 
     return DefaultTabController(
@@ -104,93 +124,120 @@ class _ParticipantsState extends State<Participants> {
                 height: MediaQuery.of(context).size.height * .604,
                 child: TabBarView(
                   children: [
-                    Expanded(
-                        child: StreamBuilder<List<Participant>>(
-                            stream: readAvocats(),
-                            builder: (context, snapshot) {
+
+                    Flex(
+                      direction: Axis.vertical,
+                      children:[ Expanded(
+                          child: StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('Events')
+                                  .doc("congresVI")
+                                  .collection("inscriptions")
+                                  .snapshots(),
+                              builder: (context, snapshot) {
 
 
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              }
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
 
-                              if (snapshot.connectionState ==
-                                  ConnectionState.none) {
-                                return Center(
-                                    child:
-                                        Text("Pas d'inscrits pour le moment"));
-                              }
+                                if (snapshot.connectionState ==
+                                    ConnectionState.none) {
+                                  return Center(
+                                      child:
+                                          Text("Pas d'inscrits pour le moment"));
+                                }
 
-                              // if (snapshot.hasError) {
-                              //   return Center(
-                              //       child: Text('Erreur de lecture'));
-                              // }
+                                // if (snapshot.hasError) {
+                                //   return Center(
+                                //       child: Text('Erreur de lecture'));
+                                // }
 
-                              final participants = snapshot.data!;
+                                final participants = snapshot.data;
 
-                              print(participants);
+                              //  print("TEST PARTICIPANTS ${participants?.size}");
 
-                              return Center(child: Text("En cours de maintenance"));
-                              // return ListView(
-                              //     children: participants
-                              //         .map(buildParticipant)
-                              //         .toList());
-                            })),
+                                //return Center(child: Text("En cours de maintenance"));
+                                return ListView.builder(
+                                    itemCount: participants?.size,
+                                    itemBuilder: (context, index){
+                                    return ListTile(
+                                      leading: CircleAvatar(
+                                        child: FaIcon(FontAwesomeIcons.user),
+                                      ),
+                                      title: Text("${participants!.docs[index]['nom']} ${participants!.docs[index]['prenom']}"),
+                                      subtitle: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                              "${participants!.docs[index]['pays']}"),
+                                          Text("${participants!.docs[index]['createdAt'].toDate().toString()}")
+                                        ],
+                                      ),
+                                    );
+                                });
+                              })),
+                    ]),
 
-                    Expanded(
-                        child: Card(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                    Flex(
+                      mainAxisSize: MainAxisSize.min,
+                      direction: Axis.vertical,
+                      children:[ Expanded(
+                          child: Card(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
 
-                              children: [
-                            Padding(
-                            padding: const EdgeInsets.only(left: 5.0),
-                            child: Align(
-                                alignment: Alignment.topCenter,
-                                child: CircleAvatar(
-                                radius: getProportionateScreenHeight(70),
-                                backgroundColor: Colors.green,
-                                child: CircleAvatar(
-                                  radius: getProportionateScreenHeight(60),
-                                  backgroundColor: Colors.white,
-                                  child:
-                                  CircleAvatar(
+                                children: [
+                              Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: CircleAvatar(
+                                  radius: getProportionateScreenHeight(70),
+                                  backgroundColor: Colors.green,
+                                  child: CircleAvatar(
+                                    radius: getProportionateScreenHeight(60),
                                     backgroundColor: Colors.white,
-                                    radius: 50,
-                                    child: FaIcon(FontAwesomeIcons.getPocket, color: Colors.green, size: 40,),
-                                  ))))),
+                                    child:
+                                    CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: 50,
+                                      child: FaIcon(FontAwesomeIcons.getPocket, color: Colors.green, size: 40,),
+                                    ))))),
 
-                                SizedBox(height: getProportionateScreenHeight(50),),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20, right: 20 ),
-                                  child: Column(
+                                  SizedBox(height: getProportionateScreenHeight(50),),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 20, right: 20 ),
+                                    child: Column(
 
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Nombre inscrits : 20',
-                                        style: const TextStyle(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Nombre inscrits : $n',
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(height: 20,),
+                                        Text('Total perçu: 1000000 FCFA',style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 15.0,
                                           fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(height: 20,),
-                                      Text('Total perçu: 1000000 FCFA',style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),)
-                                    ],
+                                        ),)
+                                      ],
+                                    ),
                                   ),
-                                ),
 
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        )
+                      ]
+                    )
 
                   ],
                 ),

@@ -33,13 +33,7 @@ class Body extends StatelessWidget {
             icon: "assets/icons/User Icon.svg",
             press: () => {},
           ),
-          ProfileMenu(
-            text: "Site web FAUJA",
-            icon: "assets/icons/Bell.svg",
-              press: (){
-                _launchURL();
-              }
-          ),
+
           ProfileMenu(
             text: "Contacts Fauja",
             icon: "assets/icons/Settings.svg",

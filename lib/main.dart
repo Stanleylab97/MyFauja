@@ -8,12 +8,12 @@ import 'package:myfauja/models/theme_model.dart';
 import 'package:myfauja/pages/splash/splash_screen.dart';
 import 'package:myfauja/utils/common/routes.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+//import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.instance;
-FirebaseAnalyticsObserver firebaseObserver =
-FirebaseAnalyticsObserver(analytics: firebaseAnalytics);
+// FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.instance;
+// FirebaseAnalyticsObserver firebaseObserver =
+// FirebaseAnalyticsObserver(analytics: firebaseAnalytics);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
               // supportedLocales: context.supportedLocales,
               // localizationsDelegates: context.localizationDelegates,
               //locale: context.locale,
-              navigatorObservers: [firebaseObserver],
+              //navigatorObservers: [firebaseObserver],
               theme: ThemeModel().lightMode,
               darkTheme: ThemeModel().darkMode,
               themeMode:
