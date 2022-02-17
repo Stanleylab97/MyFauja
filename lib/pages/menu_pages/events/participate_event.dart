@@ -16,7 +16,7 @@ import 'package:myfauja/ui/components/form_error.dart';
 import 'package:myfauja/utils/common/constants.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:provider/provider.dart';
-
+import 'dart:io';
 import '../../../models/firebase_loyer.dart';
 import '../../../utils/common/size_config.dart';
 
@@ -93,7 +93,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   bool typeAvocat = true;
   String dropdownValue = 'Avocat inscrit au barreau';
   late Participant p;
-  late String idInscription;
+  String idInscription="";
   CollectionReference inscriptions = FirebaseFirestore.instance
       .collection('Events')
       .doc("congresVI")
@@ -126,44 +126,44 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     FirebaseLoyer? loyer=sb.getUserDatafromFirebaseInApp(FirebaseAuth.instance.currentUser!.uid);
 
 
-    void sucessCallback(response, context) {
-      print(response);
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SuccessScreen(
-            nom: lastName.toString(),
-            amount: response['amount'],
-            transactionId: response['transactionId'],
-            numero_Inscrption:
-            DateFormat('yyyyMMddHHmmss').format(DateTime.now()),
-          ),
-        ),
-      );
-    }
+    // void sucessCallback(response, context) {
+    //   print(response);
+    //   Navigator.pop(context);
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => SuccessScreen(
+    //         nom: lastName.toString(),
+    //         amount: response['amount'],
+    //         transactionId: response['transactionId'],
+    //         numero_Inscrption:
+    //         DateFormat('yyyyMMddHHmmss').format(DateTime.now()),
+    //       ),
+    //     ),
+    //   );
+    // }
 
-    final kkiapay_avocat = KKiaPay(
-      amount: 2,
-      phone: phoneNumber,
-      data: 'Congres VI',
-      sandbox: false,
-      apikey: '0866da3bacd24a50be86e5bed2854c77e80bcfce',
-      callback: sucessCallback,
-      name: lastName.toString() + " " + firstName.toString(),
-      theme: "#50994a",
-    );
-
-    final kkiapay_stagiaire = KKiaPay(
-      amount: 1,
-      phone: phoneNumber,
-      data: 'Congres VI',
-      sandbox: false,
-      apikey: '0866da3bacd24a50be86e5bed2854c77e80bcfce',
-      callback: sucessCallback,
-      name: "JOHN DOE",
-      theme: "#50994a",
-    );
+    // final kkiapay_avocat = KKiaPay(
+    //   amount: 2,
+    //   phone: phoneNumber,
+    //   data: 'Congres VI',
+    //   sandbox: false,
+    //   apikey: '0866da3bacd24a50be86e5bed2854c77e80bcfce',
+    //   callback: sucessCallback,
+    //   name: lastName.toString() + " " + firstName.toString(),
+    //   theme: "#50994a",
+    // );
+    //
+    // final kkiapay_stagiaire = KKiaPay(
+    //   amount: 1,
+    //   phone: phoneNumber,
+    //   data: 'Congres VI',
+    //   sandbox: false,
+    //   apikey: '0866da3bacd24a50be86e5bed2854c77e80bcfce',
+    //   callback: sucessCallback,
+    //   name: "JOHN DOE",
+    //   theme: "#50994a",
+    // );
 
     registerForEvent() async {
       await ib.checkInternet();
@@ -176,7 +176,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
       } else {
         // Call the user's CollectionReference to add a new user
         inscriptions.add({
-          'nom': lastName, // John Doe
+          'nom': lastName!.toUpperCase(), // John Doe
           'prenom': firstName, // Stokes and Sons
           'bareau_annee': bareau_annee,
           'type': dropdownValue,
@@ -196,7 +196,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                typeAvocat ? kkiapay_avocat : kkiapay_stagiaire),
+                SuccessScreen(prenom: firstName.toString(),nom: lastName.toString(), numero_Inscrption: value.id)),
           );
         }).catchError((error) {
           Flushbar(

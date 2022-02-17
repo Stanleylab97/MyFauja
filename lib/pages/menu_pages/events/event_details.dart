@@ -39,46 +39,57 @@ class _BodyState extends State<_Body> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Column(
-          children: [
-            Padding(
-                padding: const EdgeInsets.only(
-                  top: 20,
-                  left: 4.8,
-                ),
-                child: Image(
-                    image: AssetImage('assets/images/logos/logo.png'),
-                    width: getProportionateScreenWidth(150),
-                    height: getProportionateScreenHeight(150))),
-            Divider(
-              color: Color.fromRGBO(204, 242, 201, 1),
-              height: 5,
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            ElevatedButton(
-              child: Text("S'inscrire",
-                  style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-              onPressed: () {
-                Navigator.pushReplacementNamed(
-                    context, RegisterToEvent.routeName);
-              },
-            )
-          ],
+        Container(
+          color: Colors.green,
+          child: Column(
+            children: [
+              Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20,
+                    left: 4.8,
+                  ),
+                  child: Image(
+                      image: AssetImage('assets/images/logos/logo.png'),
+                      width: getProportionateScreenWidth(150),
+                      height: getProportionateScreenHeight(150))),
+              SizedBox(
+                height: 5,
+              ),
+              Text("6ème congrès de la FA-UJA",
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22, color: Colors.white)),
+              Divider(
+                color: Color.fromRGBO(204, 242, 201, 1),
+                height: 5,
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              ElevatedButton(
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(
+                  Colors.white,
+                )),
+                child: Text("S'inscrire",
+                    style: TextStyle(fontWeight: FontWeight.w500, color: Colors.green)),
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                      context, RegisterToEvent.routeName);
+                },
+              )
+            ],
+          ),
         ),
         Expanded(
             flex: 2,
             child: Container(
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(81, 153, 74, 1),
+                  color: Colors.green,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(40),
                     bottomRight: Radius.circular(40),
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0, right: 10),
+                  padding: const EdgeInsets.only(left: 10.0, right: 10, bottom: 18),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
@@ -89,11 +100,11 @@ class _BodyState extends State<_Body> {
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w800,
-                                    fontSize: 30))),
-                        SizedBox(height: 2),
+                                    fontSize: 20))),
+                        SizedBox(height: getProportionateScreenHeight(10)),
                         TabBar(
                             indicatorSize: TabBarIndicatorSize.label,
-                            indicatorColor: Colors.green,
+                            indicatorColor: Colors.white,
                             labelColor: Colors.white,
                             isScrollable: true,
                             // indicator: RectangularIndicator(
@@ -163,10 +174,13 @@ class _BodyState extends State<_Body> {
                             child: Card(
                                 color: Colors.white,
                                 elevation: 8,
-                                child: Column(children: [
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
                                   SizedBox(
                                     height: 12,
                                   ),
+
                                   Text("ACCUEIL DES PARTICIPANTS",
                                       style: TextStyle(
                                           color: Colors.red,
@@ -174,43 +188,48 @@ class _BodyState extends State<_Body> {
                                   SizedBox(
                                     height: 15,
                                   ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
+                                      Padding(padding: EdgeInsets.only(left:50),
+                                        child: Column(children:[
+                                          Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                              children: [
 
-                                        Text("Accueil à l’aéroport,")
-                                      ]),
-                                  SizedBox(
-                                    height: 6,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
+                                                Text("Accueil à l’aéroport,")
+                                              ]),
+                                          SizedBox(
+                                            height: 6,
+                                          ),
+                                          Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                              children: [
 
-                                        Text("Aide aux formalités")
-                                      ]),
-                                  SizedBox(
-                                    height: 6,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
+                                                Text("Aide aux formalités")
+                                              ]),
+                                          SizedBox(
+                                            height: 6,
+                                          ),
+                                          Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                              children: [
 
-                                        Text("Installation à l’hôtel")
-                                      ]),
-                                  SizedBox(
-                                    height: 6,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
+                                                Text("Installation à l’hôtel")
+                                              ]),
+                                          SizedBox(
+                                            height: 6,
+                                          ),
+                                          Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                              children: [
 
-                                        Text("Remise des kits, etc.")
-                                      ]),
+                                                Text("Remise des kits, etc.")
+                                              ]),
+                                        ]),
+                                      ),
+
                                   SizedBox(
                                     height: 20,
                                   ),
@@ -242,7 +261,7 @@ class _BodyState extends State<_Body> {
                                               SizedBox(
                                                 width: 1,
                                               ),
-                                              Text("19H A 23H00")
+                                              Text("19H - 23H00")
                                             ],
                                           ),
                                         )
@@ -262,49 +281,27 @@ class _BodyState extends State<_Body> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(
-                                        height: 12,
+                                        height: getProportionateScreenHeight(80),
                                       ),
-                                      Text("DINER",
-                                          style: TextStyle(
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.w600)),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
+                                      Text("Diner de bienvenue aux congressistes",
+                                          textAlign: TextAlign.center,
 
-                                            Text("Accueil à l’aéroport,")
-                                          ]),
+
+                                      ),
                                       SizedBox(
-                                        height: 6,
+                                        height: getProportionateScreenHeight(50),
                                       ),
                                       Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceAround,
                                           children: [
-                                            Container(
-                                              child: Row(
-                                                children: [
-                                                  FaIcon(
-                                                    FontAwesomeIcons.mapMarker,
-                                                    color: Colors.red,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 1,
-                                                  ),
-                                                  Text("Hotel")
-                                                ],
-                                              ),
-                                            ),
+
+
                                             Container(
                                               child: Row(
                                                 children: [
                                                   FaIcon(
                                                     FontAwesomeIcons.clock,
-                                                    color: Colors.red,
                                                   ),
                                                   SizedBox(
                                                     width: 1,
@@ -326,9 +323,7 @@ class _BodyState extends State<_Body> {
                               elevation: 8,
                               child: Center(
                                   child: Text("Soirée Blanche",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600))),
+                                      )),
                             )),
                       ],
                     ))
@@ -352,54 +347,47 @@ class _BodyState extends State<_Body> {
                                   SizedBox(
                                     height: 12,
                                   ),
-                                  Text(
-                                      "Arrivée, inscription , retrait des kits et installation des participants",
-                                      style: TextStyle(
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.w600)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left:6.0),
+                                    child: Text(
+                                        "Arrivée, inscription , retrait des kits et installation des participants",
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w600)),
+                                  ),
                                   SizedBox(
                                     height: 15,
                                   ),
-                                  Row(
-                                      mainAxisAlignment:
+
+                                Padding(padding: EdgeInsets.only(left:10),
+                                    child:Column(children:[
+                                      Row(
+                                          mainAxisAlignment:
                                           MainAxisAlignment.start,
-                                      children: [Text("Mise en place")]),
-                                  SizedBox(
-                                    height: 6,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
+                                          children: [Text("Mise en place")]),
+                                      SizedBox(
+                                        height: 6,
+                                      ),
+                                      Row(
+                                          mainAxisAlignment:
                                           MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "Arrivée et installation des autorités")
-                                      ]),
-                                  SizedBox(
-                                    height: 6,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
+                                          children: [
+                                            Text(
+                                                "Arrivée et installation des autorités")
+                                          ]),
+                                      SizedBox(
+                                        height: 6,
+                                      ),
+                                      Row(
+                                          mainAxisAlignment:
                                           MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "Cérémonie d’ouverture \n(Allocution du Président du comité ")
-                                      ]),
-                                  SizedBox(
-                                    height: 6,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "d’organisation, du Président sortant de la FAJUA et discours d’ouverture du Congrès) ",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12))
-                                      ]),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
+                                          children: [
+                                            Text(
+                                                "Cérémonie d’ouverture \n(Allocution du Président du comité\nd’organisation, du Président sortant\nde la FAJUA et discours \nd’ouverture du Congrès) ")
+                                          ]),
+
+
+                                    ])),
                                   Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
@@ -422,30 +410,36 @@ class _BodyState extends State<_Body> {
                                           ),
                                         ),
                                         Container(
+
                                           child: Row(
                                             children: [
-                                              Text("09h 30min à 10h00min",
+                                              Text("09h-09h30",
                                                   style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 12))
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                          child: Row(
-                                            children: [
-                                              Text("Pause-Café",
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12))
-                                            ],
-                                          ),
-                                        )
+
                                       ]),
                                   SizedBox(
                                     height: 20,
                                   ),
                                 ]))),
+                        Container(
+                          width: 250,
+                          height: 210,
+                          child: Card(
+                              color: Colors.white,
+                              elevation: 8,
+                              child:Center(child:
+                              Text("Pause-Café\n09h30-10h00",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18))
+                          ),
+                          ),
+                        ),
                         Container(
                             width: 250,
                             height: 210,
@@ -471,7 +465,7 @@ class _BodyState extends State<_Body> {
                                               MainAxisAlignment.start,
                                           children: [
                                             Text(
-                                                "1er Panel : le défi de la gouvernance et de la redevabilité gage de la paix en Afrique Intervenants :  Me, Avocat)")
+                                                "1er Panel : le défi de la gouvernance\n et de la redevabilité gagede la paix \nen Afrique Intervenants:\  Me, Avocat)")
                                           ]),
                                       SizedBox(
                                         height: 6,
@@ -489,7 +483,7 @@ class _BodyState extends State<_Body> {
                                           children: [
 
                                             Text(
-                                                "2ème Communication :\n (Me, Avocat)")
+                                                "2ème Communication : (Me, Avocat)")
                                           ]),
                                       SizedBox(
                                         height: 6,
@@ -754,7 +748,7 @@ class _BodyState extends State<_Body> {
                                   SizedBox(
                                     height: 6,
                                   ),
-                                  Text("09h00min à 10 h 00min",
+                                  Text("09h00 - 10h00",
                                       style: TextStyle(
                                           color: Colors.red,
                                           fontWeight: FontWeight.w600)),
@@ -769,7 +763,18 @@ class _BodyState extends State<_Body> {
                                           width: 10,
                                         ),
                                         Text(
-                                            "4e Panel :  la Pratique du contentieux du sport en Afrique : ")
+                                            "4e Panel:")
+                                      ]),
+                                  SizedBox(
+                                    height: 3,
+                                  ),
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text("La Pratique du contentieux \ndu sport en Afriqueune opportunité\n pour le Jeune Avocat.",
+                                          textAlign:TextAlign.justify,
+                                        style: TextStyle(fontWeight: FontWeight.w500))
                                       ]),
                                   SizedBox(
                                     height: 3,
@@ -779,40 +784,12 @@ class _BodyState extends State<_Body> {
                                           MainAxisAlignment.start,
                                       children: [
                                         Text(
-                                            "une opportunité pour le Jeune Avocat.")
+                                            "Communicateur: \nMe Daniel Blaise NGOS, \nancien Président de la FAUJA &\n Avocat Barreau du Cameroun)")
                                       ]),
                                   SizedBox(
                                     height: 3,
                                   ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "4e Panel :  la Pratique du\n contentieux du sport\n en Afrique : une\ opportunité pour le Jeune Avocat.")
-                                      ]),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text("10 h 30min à 13h00min")
-                                      ]),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "Assemblée Générale Elective \ndu nouveau Bureau",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14))
-                                      ]),
+
                                   SizedBox(
                                     height: 20,
                                   ),
@@ -854,84 +831,117 @@ class _BodyState extends State<_Body> {
                             child: Card(
                                 color: Colors.white,
                                 elevation: 8,
-                                child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        height: 12,
-                                      ),
-                                      Text("Après-midi libre ",
-                                          style: TextStyle(
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.w600)),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text("20H Diner de gala")
-                                          ]),
-                                      SizedBox(
-                                        height: 6,
-                                      ),
-                                      Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            FaIcon(FontAwesomeIcons.checkCircle,
-                                                color: Colors.black),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(
-                                                "Lieu : Salle de fête le MAJESTIC")
-                                          ]),
-                                      Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            FaIcon(FontAwesomeIcons.checkCircle,
-                                                color: Colors.black),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text("00H30 à l’aube ")
-                                          ]),
-                                      SizedBox(
-                                        height: 6,
-                                      ),
-                                      Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Container(
-                                              child: Row(
-                                                children: [
-                                                  FaIcon(
-                                                    FontAwesomeIcons.mapMarker,
-                                                    color: Colors.red,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 1,
-                                                  ),
-                                                  Text("COTONOU BY NIGHT",
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 12))
-                                                ],
+
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 20.0, ),
+                                  child: Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                        Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                            children: [
+                                              Text("10h30 à 13h00")
+                                            ]),
+                                        SizedBox(
+                                          height: 3,
+                                        ),
+                                        Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  "Assemblée Générale \nelective du nouveau Bureau",
+                                                  textAlign: TextAlign.center,
+                                                  )
+                                            ]),
+
+                                        SizedBox(
+                                          height: getProportionateScreenHeight(110),
+                                        ),
+                                      ]),
+                                ))),
+                        Container(
+                            width: 250,
+                            height: 210,
+                            child: Card(
+                                color: Colors.white,
+                                elevation: 8,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left:20.0, right:1),
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                        Text("Après-midi libre ",
+                                           ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                width: 10,
                                               ),
-                                            ),
-                                          ]),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                    ]))),
+                                              Text("20H Diner de Gala")
+                                            ]),
+                                        SizedBox(
+                                          height: 6,
+                                        ),
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+
+                                              Text(
+                                                  "Lieu : Salle de fête le MAJESTIC")
+                                            ]),
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+
+                                              Text("00H30 à l’aube ")
+                                            ]),
+                                        SizedBox(
+                                          height: 6,
+                                        ),
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Container(
+                                                child: Row(
+                                                  children: [
+                                                    FaIcon(
+                                                      FontAwesomeIcons.mapMarker,
+                                                      color: Colors.red,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 1,
+                                                    ),
+                                                    Text("COTONOU BY NIGHT",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 12))
+                                                  ],
+                                                ),
+                                              ),
+                                            ]),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                      ]),
+                                ))),
                       ],
                     ))
                   ],
@@ -943,20 +953,20 @@ class _BodyState extends State<_Body> {
                     Expanded(
                         child: Center(
                       child: Container(
-                          width: 250,
+                          width: 240,
                           height: 210,
                           child: Card(
                               color: Colors.white,
                               elevation: 8,
                               child: Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 20.0, right: 20.0),
+                                    left: 60.0, right: 20.0),
                                 child: Center(
                                   child: Column(children: [
                                     SizedBox(
                                       height: 12,
                                     ),
-                                    Text("09h00min à 17 h 00min",
+                                    Text("09h00 à 17h00",
                                         style: TextStyle(
                                             color: Colors.red,
                                             fontWeight: FontWeight.w600)),

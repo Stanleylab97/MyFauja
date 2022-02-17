@@ -11,7 +11,7 @@ class Config {
   final String iOSAppId = '00000000'; //your ios app id
 
   final String doneAsset = 'assets/done.json';
-  final Color appColor = Color.fromRGBO(47, 194, 38, 1.0); //your app color
+  final Color appColor = Colors.green; //your app color
 
   //Intro images
   final String introImage1 = 'assets/images/intro/news1.png';

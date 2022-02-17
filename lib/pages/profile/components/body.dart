@@ -16,11 +16,7 @@ class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SignInBloc sb = context.read<SignInBloc>();
-    const String _url = 'http://fauja.org';
 
-    void _launchURL() async {
-      if (!await launch(_url)) throw 'Could not launch $_url';
-    }
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 20),

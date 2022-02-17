@@ -8,6 +8,7 @@ import 'package:myfauja/models/theme_model.dart';
 import 'package:myfauja/pages/splash/splash_screen.dart';
 import 'package:myfauja/utils/common/routes.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';                            // Add this import.
 //import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -85,6 +86,7 @@ class MyApp extends StatelessWidget {
               // localizationsDelegates: context.localizationDelegates,
               //locale: context.locale,
               //navigatorObservers: [firebaseObserver],
+
               theme: ThemeModel().lightMode,
               darkTheme: ThemeModel().darkMode,
               themeMode:
